@@ -25,12 +25,11 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
 
         installSplashScreen()
 
         setContent {
-            ShopperRotasTheme {
+            ShopperRotasTheme(dynamicColor = false) {
                 SetBarColor(PrimaryColor)
 
                 Surface(
@@ -43,22 +42,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    ShopperRotasTheme {
-        Greeting("Android")
-    }
-}
-
 @Preview
 @Composable
 private fun BottomNavigation() {
@@ -68,8 +51,8 @@ private fun BottomNavigation() {
         navController = navController,
         startDestination = Screen.MainScreen.route
     ) {
-        composable(route = Screen.MainScreen.route) { MainScreen() }
-        composable(route = Screen.TravelRequest.route) { TravelRequest() }
+        composable(route = Screen.MainScreen.route) { MainScreen(navController = navController) }
+        composable(route = Screen.TravelRequest.route) { TravelRequest(navController = navController) }
         composable(route = Screen.TravelOptions.route) { TravelOptions() }
         composable(route = Screen.TravelHistory.route) { TravelHistory() }
     }
