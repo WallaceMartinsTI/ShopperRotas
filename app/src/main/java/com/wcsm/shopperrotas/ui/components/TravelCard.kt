@@ -30,7 +30,6 @@ import com.wcsm.shopperrotas.ui.theme.OnPrimaryColor
 import com.wcsm.shopperrotas.ui.theme.OnSurfaceColor
 import com.wcsm.shopperrotas.ui.theme.ShopperRotasTheme
 import com.wcsm.shopperrotas.ui.theme.TertiaryColor
-import com.wcsm.shopperrotas.utils.getKms
 import com.wcsm.shopperrotas.utils.toBRLString
 import com.wcsm.shopperrotas.utils.toBrazillianDatetime
 
@@ -74,7 +73,7 @@ fun TravelCard(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = ride.distance.getKms(),
+                    text = ride.distance.toString(),
                     color = OnPrimaryColor
                 )
                 Text(

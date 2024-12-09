@@ -16,10 +16,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -39,11 +37,9 @@ import com.wcsm.shopperrotas.ui.theme.BackgroundColor
 import com.wcsm.shopperrotas.ui.theme.ErrorColor
 import com.wcsm.shopperrotas.ui.theme.PrimaryColor
 import com.wcsm.shopperrotas.ui.theme.ShopperRotasTheme
-import com.wcsm.shopperrotas.utils.getKmOrMeters
 import com.wcsm.shopperrotas.utils.getMinutesAndSeconds
 import com.wcsm.shopperrotas.utils.revertGetMinutesAndSeconds
 import com.wcsm.shopperrotas.viewmodel.TravelViewModel
-import kotlinx.coroutines.delay
 
 @Composable
 fun TravelOptions(
@@ -59,7 +55,7 @@ fun TravelOptions(
     val errorMessage by travelViewModel.errorMessage.collectAsStateWithLifecycle()
 
     val duration by remember { mutableStateOf(estimateResponse?.duration?.getMinutesAndSeconds() ?: "00:00") }
-    val distance by remember { mutableStateOf(estimateResponse?.distance?.getKmOrMeters() ?: "0") }
+    val distance by remember { mutableStateOf(estimateResponse?.distance?.toString()) }
 
     LaunchedEffect(confirmRideResponse) {
         if(confirmRideResponse?.success == true) {
@@ -111,14 +107,14 @@ fun TravelOptions(
             DriversAvailable(drivers) { driver ->
                 travelViewModel.resetErrorMessage()
                 // When user select a driver
-                Log.i(TAG, "estimateResponse?.distance?.getKmOrMeters() ?: \"0\": ${estimateResponse?.distance?.getKmOrMeters() ?: "0"}")
                 Log.i(TAG, "distance: $distance")
-                Log.i(TAG, "distance.toIntOrNull() ?: 0: ${distance.toIntOrNull() ?: 0}")
+                Log.i(TAG, "distance?.toDoubleOrNull() ?: 1.0: ${distance?.toDoubleOrNull() ?: 1.0}")
+
                 val confirmRide = ConfirmRideRequest(
                     customer_id = requestRideData?.customer_id ?: "",
                     origin = requestRideData?.origin ?: "",
                     destination = requestRideData?.destination ?: "",
-                    distance = distance.toIntOrNull() ?: 1,
+                    distance = distance?.toDoubleOrNull() ?: 1.0,
                     duration = duration.revertGetMinutesAndSeconds(),
                     driver = Driver(driver.id, driver.name),
                     value = driver.value

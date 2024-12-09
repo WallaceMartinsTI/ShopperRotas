@@ -21,19 +21,6 @@ fun String.revertGetMinutesAndSeconds() : String {
     return this.replace(":", "")
 }
 
-fun Int.getKmOrMeters(): String {
-    return if (this < 1000) {
-        "$this metros"
-    } else {
-        val kilometers = this / 1000.0
-        String.format(ptBrLocale, "%.2f Km", kilometers)
-    }
-}
-
-fun Double.getKms(): String {
-    return String.format(ptBrLocale, "%.2f Km", this)
-}
-
 fun String.toBrazillianDatetime(): String? {
     val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
     val outputFormat = SimpleDateFormat("dd/MM/yyyy - HH:mm", ptBrLocale)

@@ -1,5 +1,6 @@
 package com.wcsm.shopperrotas.ui.components
 
+import android.util.Log
 import android.widget.Space
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,6 +14,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -29,13 +31,14 @@ import com.wcsm.shopperrotas.ui.theme.ShopperRotasTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TravelHisotryFilter(
-    onGetAll: (customerId: String) -> Unit,
+    onGetAll: (customerId: String, driverId: Int?) -> Unit,
     onApplyFilter: () -> Unit
 ) {
     var userId by rememberSaveable { mutableStateOf("") }
+    var userIdError by rememberSaveable { mutableStateOf("") }
     var driversDropdownExpanded by rememberSaveable { mutableStateOf(false) }
 
-    var selectedDriverId by rememberSaveable { mutableIntStateOf(0) }
+    var selectedDriverId by rememberSaveable { mutableIntStateOf(-1) }
     var selectedDriverName by rememberSaveable { mutableStateOf("Escolha um motorista") }
 
     Column(
@@ -44,13 +47,17 @@ fun TravelHisotryFilter(
     ) {
         CustomTextField(
             value = userId,
-            onValueChange = {},
+            onValueChange = {
+                userId = it
+            },
             label = {
                 Text("Usuário")
             },
             placeholder = {
                 Text("Informe o ID do usuário.")
-            }
+            },
+            isError = userIdError.isNotEmpty(),
+            errorMessage = userIdError
         )
 
         Box {
@@ -123,7 +130,16 @@ fun TravelHisotryFilter(
 
             Button(
                 onClick = {
-                    onGetAll(userId)
+                    userIdError = ""
+                    if(userId.isEmpty()) {
+                        userIdError = "Você deve informar um ID de usuário."
+                    } else {
+                        if(selectedDriverId != -1) {
+                            onGetAll(userId, selectedDriverId)
+                        } else {
+                            onGetAll(userId, null)
+                        }
+                    }
                 }
             ) {
                 Text("LISTAS TODAS")
@@ -136,6 +152,6 @@ fun TravelHisotryFilter(
 @Composable
 fun TravelHisotryFilterPreview() {
     ShopperRotasTheme(dynamicColor = false) {
-        TravelHisotryFilter({}) {}
+        TravelHisotryFilter({ _, _ ->}) {}
     }
 }

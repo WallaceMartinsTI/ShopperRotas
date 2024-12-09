@@ -1,5 +1,6 @@
 package com.wcsm.shopperrotas.ui.screen
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -11,6 +12,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,11 +35,17 @@ fun TravelHistory(
 ) {
     val riderHistory by travelViewModel.ridesHistory.collectAsStateWithLifecycle()
 
+    LaunchedEffect(riderHistory) {
+        Log.i("#-# TESTE #-#", "riderHistory: $riderHistory")
+    }
+
     Surface(
         modifier = Modifier.fillMaxSize()
     ) {
         Column(
-            modifier = Modifier.fillMaxSize().background(BackgroundColor),
+            modifier = Modifier
+                .fillMaxSize()
+                .background(BackgroundColor),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
@@ -51,8 +59,8 @@ fun TravelHistory(
             Text("Filtre as corridas ou busque por todas!")
 
             TravelHisotryFilter(
-                onGetAll = { customerId ->
-                    travelViewModel.fetchRidesHistory(customerId, null)
+                onGetAll = { customerId, driverId ->
+                    travelViewModel.fetchRidesHistory(customerId, driverId)
                 }
             ) {}
 

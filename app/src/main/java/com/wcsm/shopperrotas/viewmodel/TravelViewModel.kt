@@ -113,10 +113,17 @@ class TravelViewModel(
     }
 
     fun fetchRidesHistory(customerId: String, driverId: Int?) {
+        Log.i(TAG, "fetchRidesHistory")
         viewModelScope.launch {
             try {
+                Log.i(TAG, "customerId: $customerId")
+                Log.i(TAG, "driverId: $driverId")
                 val response = shopperAPI.getHistoryRides(customerId, driverId)
+
+                Log.i(TAG, "response: $response")
                 if (response.isSuccessful) {
+                    Log.i(TAG, "response.body()?.rides: ${response.body()?.rides}")
+                    Log.i(TAG, "response.body(): ${response.body()}")
                     _ridesHistory.value = response.body()?.rides
                     _errorMessage.value = null
                 } else {

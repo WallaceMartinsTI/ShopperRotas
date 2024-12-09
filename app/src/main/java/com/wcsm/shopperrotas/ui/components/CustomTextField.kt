@@ -90,7 +90,7 @@ fun CustomTextField(
             Text(
                 text = errorMessage,
                 color = ErrorColor,
-                modifier = Modifier.padding(start = 8.dp)
+                modifier = Modifier.width(280.dp).padding(start = 8.dp)
             )
         }
     }

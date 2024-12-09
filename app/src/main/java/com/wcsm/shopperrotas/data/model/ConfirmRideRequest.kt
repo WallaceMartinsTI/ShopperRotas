@@ -4,7 +4,7 @@ data class ConfirmRideRequest(
     val customer_id: String,
     val origin: String,
     val destination: String,
-    val distance: Int,
+    val distance: Double,
     val duration: String,
     val driver: Driver,
     val value: Double
