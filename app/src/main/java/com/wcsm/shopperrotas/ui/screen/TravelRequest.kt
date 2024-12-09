@@ -1,6 +1,5 @@
 package com.wcsm.shopperrotas.ui.screen
 
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -17,26 +16,23 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.wcsm.shopperrotas.ui.components.TravelRequestForm
 import com.wcsm.shopperrotas.ui.model.Screen
 import com.wcsm.shopperrotas.ui.theme.BackgroundColor
-import com.wcsm.shopperrotas.ui.theme.PrimaryColor
 import com.wcsm.shopperrotas.ui.theme.ShopperRotasTheme
 import com.wcsm.shopperrotas.viewmodel.TravelViewModel
 
 @Composable
 fun TravelRequest(
     navController: NavController,
-    travelViewModel: TravelViewModel = viewModel()
+    travelViewModel: TravelViewModel = hiltViewModel()
 ) {
     val estimatedWithSuccess by travelViewModel.estimatedWithSuccess.collectAsStateWithLifecycle()
     val errorMessage by travelViewModel.errorMessage.collectAsStateWithLifecycle()

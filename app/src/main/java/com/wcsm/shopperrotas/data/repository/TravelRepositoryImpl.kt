@@ -8,8 +8,9 @@ import com.wcsm.shopperrotas.data.model.RideEstimateResponse
 import com.wcsm.shopperrotas.data.model.RideResponse
 import retrofit2.HttpException
 import retrofit2.Response
+import javax.inject.Inject
 
-class TravelRepositoryImpl(
+class TravelRepositoryImpl @Inject constructor(
     private val shopperAPI: ShopperAPI
 ) : ITravelRepository {
     override suspend fun estimate(estimateRequest: RideEstimateRequest): RideEstimateResponse {

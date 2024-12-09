@@ -1,19 +1,18 @@
 package com.wcsm.shopperrotas.ui.screen
 
+import android.annotation.SuppressLint
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -22,11 +21,16 @@ import com.wcsm.shopperrotas.ui.model.Screen
 import com.wcsm.shopperrotas.ui.theme.PrimaryColor
 import com.wcsm.shopperrotas.ui.theme.ShopperRotasTheme
 import com.wcsm.shopperrotas.viewmodel.TravelViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
         installSplashScreen()
 
@@ -37,7 +41,7 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    BottomNavigation()
+                    AppNavigation()
                 }
             }
         }
@@ -45,8 +49,8 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-private fun BottomNavigation(
-    travelViewModel: TravelViewModel = viewModel()
+private fun AppNavigation(
+    travelViewModel: TravelViewModel = hiltViewModel()
 ) {
     val navController = rememberNavController()
 

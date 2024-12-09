@@ -31,11 +31,3 @@ interface ShopperAPI {
         @Query("driver_id") driverId: Int?
     ) : Response<RideResponse>
 }
-
-// POST /ride/estimate
-
-
-// PATCH /ride/confirm
-
-
-// GET /ride/{customer_Id}?ddriver_id={id do motorista}

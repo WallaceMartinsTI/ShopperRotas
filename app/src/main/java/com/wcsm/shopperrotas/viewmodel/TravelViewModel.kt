@@ -3,8 +3,6 @@ package com.wcsm.shopperrotas.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.wcsm.shopperrotas.data.api.RetrofitService
-import com.wcsm.shopperrotas.data.api.ShopperAPI
 import com.wcsm.shopperrotas.data.model.ConfirmRideRequest
 import com.wcsm.shopperrotas.data.model.ConfirmRideResponse
 import com.wcsm.shopperrotas.data.model.Ride
@@ -12,21 +10,19 @@ import com.wcsm.shopperrotas.data.model.RideEstimateRequest
 import com.wcsm.shopperrotas.data.model.RideEstimateResponse
 import com.wcsm.shopperrotas.data.model.RideOption
 import com.wcsm.shopperrotas.data.repository.ITravelRepository
-import com.wcsm.shopperrotas.data.repository.TravelRepositoryImpl
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import retrofit2.HttpException
+import javax.inject.Inject
 
-class TravelViewModel(
-    //private val getTravelInformationRepository : IGetTravelInfoRepository
+@HiltViewModel
+class TravelViewModel @Inject constructor(
+    private val travelRepository : ITravelRepository
 ) : ViewModel() {
-    private val shopperAPI = RetrofitService.getAPI(ShopperAPI::class.java)
-    private val travelRepository:
-            ITravelRepository = TravelRepositoryImpl(shopperAPI)
-
     val TAG = "#-# TESTE #-#"
 
     private val _estimateResponse = MutableStateFlow<RideEstimateResponse?>(null)
@@ -144,7 +140,7 @@ class TravelViewModel(
     fun fetchRidesHistory(customerId: String, driverId: Int?) {
         viewModelScope.launch {
             try {
-                val response = shopperAPI.getHistoryRides(customerId, driverId)
+                val response = travelRepository.ride(customerId, driverId)
 
                 if (response.isSuccessful) {
                     _ridesHistory.value = response.body()?.rides

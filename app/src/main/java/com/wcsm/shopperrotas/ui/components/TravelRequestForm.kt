@@ -52,22 +52,20 @@ fun TravelRequestForm(
     var isClickEnabled by remember { mutableStateOf(true) }
 
 
+/*
 
     var customerId by remember { mutableStateOf("Qualquer") }
     var origin by remember { mutableStateOf("Av. Pres. Kenedy, 2385 - Remédios, Osasco - SP, 02675-031") }
     var destination by remember { mutableStateOf("Av. Paulista, 1538 - Bela Vista, São Paulo - SP, 01310-200") }
+*/
 
 
-
-
-
-/*
 
     var customerId by remember { mutableStateOf("Qualquer") }
-    var origin by remember { mutableStateOf("Qualquer") }
-    var destination by remember { mutableStateOf("Qualquer") }
+    var origin by remember { mutableStateOf("Qualquer1") }
+    var destination by remember { mutableStateOf("Qualquer2") }
 
-*/
+
 
 
     LaunchedEffect(isClickEnabled) {
