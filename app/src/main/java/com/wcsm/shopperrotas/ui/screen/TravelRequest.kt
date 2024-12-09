@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -21,19 +22,41 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.wcsm.shopperrotas.ui.components.CustomTextField
 import com.wcsm.shopperrotas.ui.components.TravelRequestForm
 import com.wcsm.shopperrotas.ui.model.Screen
 import com.wcsm.shopperrotas.ui.theme.BackgroundColor
 import com.wcsm.shopperrotas.ui.theme.PrimaryColor
 import com.wcsm.shopperrotas.ui.theme.ShopperRotasTheme
+import com.wcsm.shopperrotas.viewmodel.TravelViewModel
+import kotlinx.coroutines.delay
 
 @Composable
 fun TravelRequest(
-    navController: NavController
+    navController: NavController,
+    travelViewModel: TravelViewModel = viewModel()
 ) {
+    val estimatedWithSuccess by travelViewModel.estimatedWithSuccess.collectAsStateWithLifecycle()
+    val errorMessage by travelViewModel.errorMessage.collectAsStateWithLifecycle()
+
+    var isClickEnabled by remember { mutableStateOf(true) }
+
+    LaunchedEffect(estimatedWithSuccess) {
+        if(estimatedWithSuccess == true) {
+            navController.navigate(Screen.TravelOptions.route)
+        }
+    }
+
+    LaunchedEffect(isClickEnabled) {
+        if(!isClickEnabled) {
+            delay(2000)
+            isClickEnabled = true
+        }
+    }
+
     Surface(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -59,9 +82,14 @@ fun TravelRequest(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            TravelRequestForm {
-                // For Test
-                navController.navigate(Screen.TravelHistory.route)
+            TravelRequestForm(
+                isSubmitButtonEnabled = isClickEnabled,
+                errorMessage = errorMessage
+            ) { customerId, origin, destination ->
+                if(isClickEnabled) {
+                    isClickEnabled = false
+                    travelViewModel.fetchRideEstimate(customerId, origin, destination)
+                }
             }
         }
     }

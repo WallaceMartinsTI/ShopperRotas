@@ -1,5 +1,6 @@
 package com.wcsm.shopperrotas.ui.screen
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -13,6 +14,11 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -23,22 +29,34 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.wcsm.shopperrotas.R
+import com.wcsm.shopperrotas.ui.components.StylizedText
 import com.wcsm.shopperrotas.ui.model.Screen
 import com.wcsm.shopperrotas.ui.theme.BackgroundColor
 import com.wcsm.shopperrotas.ui.theme.OnSurfaceColor
 import com.wcsm.shopperrotas.ui.theme.PrimaryColor
 import com.wcsm.shopperrotas.ui.theme.ShopperRotasTheme
-import com.wcsm.shopperrotas.ui.utils.StylizedText
+import kotlinx.coroutines.delay
 
 @Composable
 fun MainScreen(
     navController: NavController
 ) {
+    var isClickEnabled by remember { mutableStateOf(true) }
+
+    LaunchedEffect(isClickEnabled) {
+        if(!isClickEnabled) {
+            delay(2000)
+            isClickEnabled = true
+        }
+    }
+
     Surface(
         modifier = Modifier.fillMaxSize()
     ) {
         Column(
-            modifier = Modifier.fillMaxSize().background(BackgroundColor),
+            modifier = Modifier
+                .fillMaxSize()
+                .background(BackgroundColor),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(80.dp))
@@ -63,15 +81,21 @@ fun MainScreen(
                 style = SpanStyle(color = PrimaryColor, fontWeight = FontWeight.Bold),
                 endText = "e descubra o caminho perfeito para você!",
                 color = OnSurfaceColor,
-                modifier = Modifier.padding(8.dp).width(350.dp)
+                modifier = Modifier
+                    .padding(8.dp)
+                    .width(350.dp)
             )
 
             Spacer(modifier = Modifier.height(80.dp))
 
             Button(
                 onClick = {
-                    navController.navigate(Screen.TravelRequest.route)
-                }
+                    if(isClickEnabled) {
+                        isClickEnabled = false
+                        navController.navigate(Screen.TravelRequest.route)
+                    }
+                },
+                enabled = isClickEnabled
             ) {
                 Text("SOLICITAR VIAGEM")
             }

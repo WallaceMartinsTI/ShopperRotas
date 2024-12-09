@@ -1,49 +1,42 @@
 package com.wcsm.shopperrotas.ui.components
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material3.Card
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.wcsm.shopperrotas.ui.theme.BackgroundColor
-import com.wcsm.shopperrotas.ui.theme.DarkBlue
+import com.wcsm.shopperrotas.data.model.Driver
+import com.wcsm.shopperrotas.data.model.Ride
+import com.wcsm.shopperrotas.ui.theme.MoneyGreenColor
 import com.wcsm.shopperrotas.ui.theme.OnPrimaryColor
 import com.wcsm.shopperrotas.ui.theme.OnSurfaceColor
-import com.wcsm.shopperrotas.ui.theme.PrimaryColor
-import com.wcsm.shopperrotas.ui.theme.SecondaryColor
 import com.wcsm.shopperrotas.ui.theme.ShopperRotasTheme
 import com.wcsm.shopperrotas.ui.theme.TertiaryColor
+import com.wcsm.shopperrotas.utils.getKms
+import com.wcsm.shopperrotas.utils.toBRLString
+import com.wcsm.shopperrotas.utils.toBrazillianDatetime
 
 @Composable
 fun TravelCard(
-    driver: String,
+    ride: Ride,
     modifier: Modifier = Modifier
 ) {
     ElevatedCard(
@@ -54,7 +47,6 @@ fun TravelCard(
     ) {
         Column(
             modifier = Modifier
-                .background(PrimaryColor)
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
@@ -63,12 +55,12 @@ fun TravelCard(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = driver,
+                    text = ride.driver.name,
                     color = OnPrimaryColor,
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = "08/12/2024 - 15:32",
+                    text = ride.date.toBrazillianDatetime() ?: ride.date,
                     color = OnPrimaryColor
                 )
             }
@@ -81,9 +73,18 @@ fun TravelCard(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(text = "8 km", color = OnPrimaryColor)
-                Text(text = "22:15", color = OnPrimaryColor)
-                Text(text = "R$ 37,82", color = OnPrimaryColor)
+                Text(
+                    text = ride.distance.getKms(),
+                    color = OnPrimaryColor
+                )
+                Text(
+                    text = ride.duration,
+                    color = OnPrimaryColor
+                )
+                Text(
+                    text = ride.value.toBRLString(),
+                    color = MoneyGreenColor
+                )
             }
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -97,7 +98,7 @@ fun TravelCard(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
-                    text = "Av. Brasil, N 312, Centro - Belo Horizonte",
+                    text = ride.origin,
                     color = TertiaryColor,
                     textAlign = TextAlign.Center
                 )
@@ -107,7 +108,7 @@ fun TravelCard(
                     tint = OnPrimaryColor
                 )
                 Text(
-                    text = "Rua Jaboticabas, N 23, Veneza - Belo Horizonte",
+                    text = ride.destination,
                     color = TertiaryColor,
                     textAlign = TextAlign.Center
                 )
@@ -120,6 +121,20 @@ fun TravelCard(
 @Composable
 fun TravelCardPreview() {
     ShopperRotasTheme(dynamicColor = false) {
-        TravelCard("Motorista 1")
+        val ride = Ride(
+            id = 46,
+        date = "2024-04-23T08:25:14",
+        origin = "20301 Ben Oval, 847, Borerton, 04094-3164",
+        destination = "8098 W Broadway Street, 662, South San Francisco, 57197",
+        distance = 99.93362203989776,
+        duration = "16:15",
+        driver = Driver(
+            id = 1,
+            name = "James Bond"
+        ),
+        value = 899.9824824229191
+        )
+
+        TravelCard(ride)
     }
 }
