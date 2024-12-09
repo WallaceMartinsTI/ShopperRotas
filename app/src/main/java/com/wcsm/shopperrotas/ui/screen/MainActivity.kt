@@ -73,6 +73,7 @@ private fun BottomNavigation(
         }
         composable(route = Screen.TravelHistory.route) {
             TravelHistory(
+                navController = navController,
                 travelViewModel = travelViewModel
             )
         }

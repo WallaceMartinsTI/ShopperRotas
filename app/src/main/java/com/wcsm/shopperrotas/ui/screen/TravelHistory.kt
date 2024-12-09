@@ -1,6 +1,7 @@
 package com.wcsm.shopperrotas.ui.screen
 
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -22,8 +23,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.wcsm.shopperrotas.ui.components.TravelCard
 import com.wcsm.shopperrotas.ui.components.TravelHisotryFilter
+import com.wcsm.shopperrotas.ui.model.Screen
 import com.wcsm.shopperrotas.ui.theme.BackgroundColor
 import com.wcsm.shopperrotas.ui.theme.PrimaryColor
 import com.wcsm.shopperrotas.ui.theme.ShopperRotasTheme
@@ -31,12 +35,14 @@ import com.wcsm.shopperrotas.viewmodel.TravelViewModel
 
 @Composable
 fun TravelHistory(
+    navController: NavController,
     travelViewModel: TravelViewModel = viewModel()
 ) {
     val riderHistory by travelViewModel.ridesHistory.collectAsStateWithLifecycle()
+    val errorMessage by travelViewModel.errorMessage.collectAsStateWithLifecycle()
 
-    LaunchedEffect(riderHistory) {
-        Log.i("#-# TESTE #-#", "riderHistory: $riderHistory")
+    BackHandler {
+        navController.navigate(Screen.MainScreen.route)
     }
 
     Surface(
@@ -66,16 +72,19 @@ fun TravelHistory(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            if(!riderHistory.isNullOrEmpty()) {
-                LazyColumn {
-                    items(riderHistory!!) { ride ->
-                        TravelCard(ride, modifier = Modifier.padding(bottom = 8.dp))
-                    }
-                }
+            if(!errorMessage.isNullOrEmpty()) {
+                Text(errorMessage!!)
             } else {
-                Text("Sem histórico para mostrar.")
+                if(!riderHistory.isNullOrEmpty()) {
+                    LazyColumn {
+                        items(riderHistory!!) { ride ->
+                            TravelCard(ride, modifier = Modifier.padding(bottom = 8.dp))
+                        }
+                    }
+                } else {
+                    Text("Sem histórico para mostrar.")
+                }
             }
-
         }
     }
 }
@@ -84,6 +93,7 @@ fun TravelHistory(
 @Composable
 fun TravelHistoryPreview() {
     ShopperRotasTheme(dynamicColor = false) {
-        TravelHistory()
+        val navController = rememberNavController()
+        TravelHistory(navController)
     }
 }

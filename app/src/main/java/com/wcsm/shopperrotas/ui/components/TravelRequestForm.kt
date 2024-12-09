@@ -1,48 +1,82 @@
 package com.wcsm.shopperrotas.ui.components
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.selection.TextSelectionColors
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.PersonPinCircle
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.wcsm.shopperrotas.ui.theme.BackgroundColor
 import com.wcsm.shopperrotas.ui.theme.ErrorColor
 import com.wcsm.shopperrotas.ui.theme.ShopperRotasTheme
+import com.wcsm.shopperrotas.ui.theme.TertiaryColor
+import com.wcsm.shopperrotas.ui.theme.White06Color
+import kotlinx.coroutines.delay
 
 @Composable
 fun TravelRequestForm(
-    isSubmitButtonEnabled: Boolean,
     modifier: Modifier = Modifier,
     errorMessage: String? = null,
     onSubmit: (customerId: String, origin: String, destination: String) -> Unit,
 ) {
+    var isClickEnabled by remember { mutableStateOf(true) }
+
+
 
     var customerId by remember { mutableStateOf("Qualquer") }
     var origin by remember { mutableStateOf("Av. Pres. Kenedy, 2385 - Remédios, Osasco - SP, 02675-031") }
     var destination by remember { mutableStateOf("Av. Paulista, 1538 - Bela Vista, São Paulo - SP, 01310-200") }
+
+
+
+
 
 /*
 
     var customerId by remember { mutableStateOf("Qualquer") }
     var origin by remember { mutableStateOf("Qualquer") }
     var destination by remember { mutableStateOf("Qualquer") }
+
 */
+
+
+    LaunchedEffect(isClickEnabled) {
+        if(!isClickEnabled) {
+            delay(2000)
+            isClickEnabled = true
+        }
+    }
 
     Column(
         modifier = Modifier
+            .background(BackgroundColor)
             .width(400.dp)
             .then(modifier),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -54,16 +88,37 @@ fun TravelRequestForm(
                 customerId = it
             },
             label = {
-                Text("Usuário")
+                Text(
+                    text = "Usuário",
+                    color = TertiaryColor,
+                    fontWeight = FontWeight.Bold
+                )
             },
             placeholder = {
                 Text("Informe o ID do usuário.")
+            },
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Person,
+                    contentDescription = "Icone de perfil",
+                    tint = White06Color
+                )
+            },
+            trailingIcon = {
+                if(customerId.isNotEmpty()) {
+                    Icon(
+                        imageVector = Icons.Default.Clear,
+                        contentDescription = "Icone de apagar",
+                        tint = White06Color,
+                        modifier = Modifier.clickable { customerId = "" }
+                    )
+                }
             },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Next
             ),
-            singleLine = true
+            singleLine = true,
         )
 
         CustomTextField(
@@ -72,16 +127,37 @@ fun TravelRequestForm(
                 origin = it
             },
             label = {
-                Text("Origem")
+                Text(
+                    text = "Origem",
+                    color = TertiaryColor,
+                    fontWeight = FontWeight.Bold
+                )
             },
             placeholder = {
                 Text("Informe o endereço de origem.")
+            },
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.PersonPinCircle,
+                    contentDescription = "Icone de localizacao da pessoa",
+                    tint = White06Color
+                )
+            },
+            trailingIcon = {
+                if(customerId.isNotEmpty()) {
+                    Icon(
+                        imageVector = Icons.Default.Clear,
+                        contentDescription = "Icone de apagar",
+                        tint = White06Color,
+                        modifier = Modifier.clickable { origin = "" }
+                    )
+                }
             },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Next
             ),
-            singleLine = true
+            maxLines = 3
         )
 
         CustomTextField(
@@ -90,16 +166,37 @@ fun TravelRequestForm(
                 destination = it
             },
             label = {
-                Text("Destino")
+                Text(
+                    text = "Destino",
+                    color = TertiaryColor,
+                    fontWeight = FontWeight.Bold
+                )
             },
             placeholder = {
                 Text("Informe o endereço de destino.")
+            },
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.LocationOn,
+                    contentDescription = "Icone de localizacao da pessoa",
+                    tint = White06Color
+                )
+            },
+            trailingIcon = {
+                if(customerId.isNotEmpty()) {
+                    Icon(
+                        imageVector = Icons.Default.Clear,
+                        contentDescription = "Icone de apagar",
+                        tint = White06Color,
+                        modifier = Modifier.clickable { destination = "" }
+                    )
+                }
             },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Done
             ),
-            singleLine = true
+            maxLines = 3
         )
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -115,9 +212,12 @@ fun TravelRequestForm(
 
         Button(
             onClick = {
-                onSubmit(customerId, origin, destination)
+                if(isClickEnabled) {
+                    isClickEnabled = false
+                    onSubmit(customerId, origin, destination)
+                }
             },
-            enabled = isSubmitButtonEnabled
+            enabled = isClickEnabled
         ) {
             Text("ESTIMAR VALOR")
         }
@@ -128,6 +228,6 @@ fun TravelRequestForm(
 @Composable
 fun TravelRequestFormPreview() {
     ShopperRotasTheme(dynamicColor = false) {
-        TravelRequestForm(true) { _, _, _ -> }
+        TravelRequestForm() { _, _, _ -> }
     }
 }

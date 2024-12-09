@@ -1,9 +1,6 @@
 package com.wcsm.shopperrotas.viewmodel
 
 import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.wcsm.shopperrotas.data.api.RetrofitService
@@ -53,27 +50,53 @@ class TravelViewModel(
     private val _ridesHistory = MutableStateFlow<List<Ride>?>(null)
     val ridesHistory: StateFlow<List<Ride>?> = _ridesHistory.asStateFlow()
 
-    fun resetErrorMessage() {
+    private val _ridesHistoryResponse = MutableStateFlow<Boolean?>(null)
+    val ridesHistoryResponse: StateFlow<Boolean?> = _ridesHistoryResponse.asStateFlow()
+
+    fun clearErrorMessage() {
         _errorMessage.value = null
+    }
+
+    fun resetEstimatedWithSuccess() {
+        _estimatedWithSuccess.value = false
+    }
+
+    fun validateLatLongForGoogleMaps(
+        originLatitude: Double?,
+        originLongitude: Double?,
+        destinationLatitude: Double?,
+        destinationLongitude: Double?
+    ): Boolean {
+        val isNotNull = originLatitude != null && originLongitude != null &&
+        destinationLatitude != null && destinationLongitude != null
+
+        val isNotZero = originLatitude != 0.0 && originLongitude != 0.0 &&
+                destinationLatitude != 0.0 && destinationLongitude != 0.0
+
+        return isNotNull && isNotZero
     }
 
     fun fetchRideEstimate(customerId: String, origin: String, destination: String) {
         _estimatedWithSuccess.value = false
         val rideRequest = RideEstimateRequest(
-            customer_id = customerId,
-            origin = origin,
-            destination = destination
+            customer_id = customerId.ifBlank { null },
+            origin = origin.ifBlank { null },
+            destination = destination.ifBlank { null }
         )
+
+        Log.i(TAG, "rideRequest: $rideRequest")
 
         viewModelScope.launch {
             try {
                 val response = travelRepository.estimate(rideRequest)
+                Log.i(TAG, "response: $response")
                 _requestRideData.value = rideRequest
                 _estimateResponse.value = response
                 _estimatedWithSuccess.value = true
                 _drivers.value = response.options
                 _errorMessage.value = null
             } catch (e: HttpException) {
+                Log.i(TAG, "e1: $e")
                 val errorBody = e.response()?.errorBody()?.string()
                 val errorDescription = errorBody?.let {
                     JSONObject(it).optString("error_description")
@@ -81,6 +104,7 @@ class TravelViewModel(
                 _errorMessage.value = errorDescription ?: "Ocorreu um erro, tente mais tarde."
                 _estimateResponse.value = null
             } catch (e: Exception) {
+                Log.i(TAG, "e2: $e")
                 _errorMessage.value = e.localizedMessage ?: "Ocorreu um erro desconhecido."
                 _estimateResponse.value = null
             }
@@ -113,30 +137,28 @@ class TravelViewModel(
     }
 
     fun fetchRidesHistory(customerId: String, driverId: Int?) {
-        Log.i(TAG, "fetchRidesHistory")
         viewModelScope.launch {
             try {
-                Log.i(TAG, "customerId: $customerId")
-                Log.i(TAG, "driverId: $driverId")
                 val response = shopperAPI.getHistoryRides(customerId, driverId)
 
-                Log.i(TAG, "response: $response")
                 if (response.isSuccessful) {
-                    Log.i(TAG, "response.body()?.rides: ${response.body()?.rides}")
-                    Log.i(TAG, "response.body(): ${response.body()}")
                     _ridesHistory.value = response.body()?.rides
+                    _ridesHistoryResponse.value = true
                     _errorMessage.value = null
                 } else {
                     val errorBody = response.errorBody()?.string()
                     val errorDescription = errorBody?.let {
                         JSONObject(it).optString("error_description")
                     }
+                    _ridesHistoryResponse.value = false
                     _errorMessage.value = errorDescription ?: "Erro desconhecido."
                 }
             } catch (e: HttpException) {
                 _errorMessage.value = "Ocorreu um erro, tente mais tarde."
+                _ridesHistoryResponse.value = false
             } catch (e: Exception) {
                 _errorMessage.value = "Ocorreu um erro desconhecido."
+                _ridesHistoryResponse.value = false
             }
         }
     }

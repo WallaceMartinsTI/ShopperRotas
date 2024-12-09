@@ -1,6 +1,8 @@
 package com.wcsm.shopperrotas.ui.screen
 
+import android.app.Activity
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -21,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -29,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.wcsm.shopperrotas.R
+import com.wcsm.shopperrotas.ui.components.LeaveAppDialog
 import com.wcsm.shopperrotas.ui.components.StylizedText
 import com.wcsm.shopperrotas.ui.model.Screen
 import com.wcsm.shopperrotas.ui.theme.BackgroundColor
@@ -41,7 +45,14 @@ import kotlinx.coroutines.delay
 fun MainScreen(
     navController: NavController
 ) {
+    val context = LocalContext.current
+
     var isClickEnabled by remember { mutableStateOf(true) }
+    var showBackHandlerDialog by remember { mutableStateOf(false) }
+
+    BackHandler {
+        showBackHandlerDialog = true
+    }
 
     LaunchedEffect(isClickEnabled) {
         if(!isClickEnabled) {
@@ -99,7 +110,15 @@ fun MainScreen(
             ) {
                 Text("SOLICITAR VIAGEM")
             }
+        }
 
+        if(showBackHandlerDialog) {
+            LeaveAppDialog(
+                onDismiss = { showBackHandlerDialog = false }
+            ) {
+                val activity = context as? Activity
+                activity?.finish()
+            }
         }
     }
 }
