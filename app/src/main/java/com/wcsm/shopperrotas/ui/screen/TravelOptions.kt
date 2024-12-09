@@ -18,6 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOff
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -107,6 +108,7 @@ fun TravelOptions(
 
     LaunchedEffect(confirmRideResponse) {
         if(confirmRideResponse?.success == true) {
+            travelViewModel.resetConfirmRideResponse()
             navController.navigate(Screen.TravelHistory.route)
         }
     }
@@ -122,9 +124,7 @@ fun TravelOptions(
         ) {
             Text(
                 text = "OPÇÕES DE VIAGEM",
-                color = PrimaryColor,
-                fontWeight = FontWeight.Bold,
-                fontSize = 24.sp,
+                style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(16.dp)
             )
 
@@ -156,7 +156,7 @@ fun TravelOptions(
                         Text(
                             text = "Mapa indisponível quando nenhum motorista é encontrado.",
                             color = TertiaryColor,
-                            fontWeight = FontWeight.Bold,
+                            style = MaterialTheme.typography.bodyMedium,
                             textAlign = TextAlign.Center,
                             modifier = Modifier.width(280.dp)
                         )
@@ -167,6 +167,7 @@ fun TravelOptions(
             if(!errorMessage.isNullOrEmpty()) {
                 Text(
                     text = "Erro: ${errorMessage!!}",
+                    style = MaterialTheme.typography.bodySmall,
                     color = ErrorColor
                 )
             }
@@ -176,8 +177,14 @@ fun TravelOptions(
                     modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    Text("Duração: $duration min")
-                    Text("Distância: $distance")
+                    Text(
+                        text = "Duração: $duration",
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                    Text(
+                        text = "Distância: $distance",
+                        style = MaterialTheme.typography.bodySmall
+                    )
                 }
             } else {
                 HorizontalDivider(color = Color.White)
@@ -185,9 +192,6 @@ fun TravelOptions(
 
             DriversAvailable(drivers) { driver ->
                 travelViewModel.clearErrorMessage()
-                // When user select a driver
-                Log.i(TAG, "distance: $distance")
-                Log.i(TAG, "distance?.toDoubleOrNull() ?: 1.0: ${distance?.toDoubleOrNull() ?: 1.0}")
 
                 val confirmRide = ConfirmRideRequest(
                     customer_id = requestRideData?.customer_id ?: "",

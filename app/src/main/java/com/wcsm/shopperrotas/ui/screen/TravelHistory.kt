@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -42,6 +43,7 @@ fun TravelHistory(
     val errorMessage by travelViewModel.errorMessage.collectAsStateWithLifecycle()
 
     BackHandler {
+        travelViewModel.clearRideHistory()
         navController.navigate(Screen.MainScreen.route)
     }
 
@@ -56,24 +58,32 @@ fun TravelHistory(
         ) {
             Text(
                 text = "HISTÓRICO DE VIAGENS",
-                color = PrimaryColor,
-                fontWeight = FontWeight.Bold,
-                fontSize = 24.sp,
+                style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(16.dp)
             )
 
-            Text("Filtre as corridas ou busque por todas!")
+            Text(
+                text = "Filtre as corridas ou busque por todas!",
+                style = MaterialTheme.typography.bodySmall
+            )
 
             TravelHisotryFilter(
                 onGetAll = { customerId, driverId ->
+                    travelViewModel.clearErrorMessage()
                     travelViewModel.fetchRidesHistory(customerId, driverId)
                 }
-            ) {}
+            ) { customerId, driverId ->
+                travelViewModel.clearErrorMessage()
+                travelViewModel.fetchRidesHistory(customerId, driverId)
+            }
 
             Spacer(modifier = Modifier.height(20.dp))
 
             if(!errorMessage.isNullOrEmpty()) {
-                Text(errorMessage!!)
+                Text(
+                    text = errorMessage!!,
+                    style = MaterialTheme.typography.bodySmall
+                )
             } else {
                 if(!riderHistory.isNullOrEmpty()) {
                     LazyColumn {
@@ -82,7 +92,10 @@ fun TravelHistory(
                         }
                     }
                 } else {
-                    Text("Sem histórico para mostrar.")
+                    Text(
+                        text = "Sem histórico para mostrar.",
+                        style = MaterialTheme.typography.bodySmall
+                    )
                 }
             }
         }

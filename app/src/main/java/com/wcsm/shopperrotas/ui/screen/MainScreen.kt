@@ -1,7 +1,6 @@
 package com.wcsm.shopperrotas.ui.screen
 
 import android.app.Activity
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -39,6 +38,8 @@ import com.wcsm.shopperrotas.ui.theme.BackgroundColor
 import com.wcsm.shopperrotas.ui.theme.OnSurfaceColor
 import com.wcsm.shopperrotas.ui.theme.PrimaryColor
 import com.wcsm.shopperrotas.ui.theme.ShopperRotasTheme
+import com.wcsm.shopperrotas.ui.theme.PoppinsFontFamily
+import com.wcsm.shopperrotas.utils.Constants
 import kotlinx.coroutines.delay
 
 @Composable
@@ -56,7 +57,7 @@ fun MainScreen(
 
     LaunchedEffect(isClickEnabled) {
         if(!isClickEnabled) {
-            delay(2000)
+            delay(Constants.CLICK_DELAY)
             isClickEnabled = true
         }
     }
@@ -81,16 +82,20 @@ fun MainScreen(
                 initialText = "Bem-vindo ao ",
                 textToStyle = "Shopper Rotas",
                 style = SpanStyle(color = PrimaryColor),
+                fontFamily = PoppinsFontFamily,
                 endText = "!",
                 fontWeight = FontWeight.Bold,
                 color = OnSurfaceColor
             )
 
+            Spacer(modifier = Modifier.height(20.dp))
+
             StylizedText(
                 initialText = "Pronto para sua próxima jornada? Clique em ",
                 textToStyle = "'SOLICITAR VIAGEM'",
                 style = SpanStyle(color = PrimaryColor, fontWeight = FontWeight.Bold),
-                endText = "e descubra o caminho perfeito para você!",
+                fontFamily = PoppinsFontFamily,
+                endText = " e descubra o caminho perfeito para você!",
                 color = OnSurfaceColor,
                 modifier = Modifier
                     .padding(8.dp)
@@ -108,7 +113,10 @@ fun MainScreen(
                 },
                 enabled = isClickEnabled
             ) {
-                Text("SOLICITAR VIAGEM")
+                Text(
+                    text = "SOLICITAR VIAGEM",
+                    fontFamily = PoppinsFontFamily
+                )
             }
         }
 

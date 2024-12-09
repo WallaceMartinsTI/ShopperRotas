@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -63,9 +64,7 @@ fun TravelRequest(
         ) {
             Text(
                 text = "SOLICITAR VIAGEM",
-                color = PrimaryColor,
-                fontWeight = FontWeight.Bold,
-                fontSize = 24.sp,
+                style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(16.dp)
             )
 
@@ -73,6 +72,7 @@ fun TravelRequest(
 
             Text(
                 text = "Preencha os campos abaixo para estimar o valor da viagem!",
+                style = MaterialTheme.typography.bodySmall,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.width(350.dp)
             )
@@ -84,6 +84,9 @@ fun TravelRequest(
             ) { customerId, origin, destination ->
                 travelViewModel.clearErrorMessage()
                 travelViewModel.fetchRideEstimate(customerId, origin, destination)
+
+                // FOR TEST
+                // navController.navigate(Screen.TravelHistory.route)
             }
         }
     }

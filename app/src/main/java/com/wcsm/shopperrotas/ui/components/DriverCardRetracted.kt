@@ -17,6 +17,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -71,13 +72,14 @@ fun DriverCardRetracted(
                 ) {
                     Text(
                         text = driver.name,
-                        fontWeight = FontWeight.Bold
+                        style = MaterialTheme.typography.bodyMedium
                     )
 
                     Text(
                         text = driver.vehicle,
                         fontSize = 14.sp,
                         maxLines = 1,
+                        style = MaterialTheme.typography.bodySmall,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.width(200.dp)
                     )
@@ -104,6 +106,7 @@ fun DriverCardRetracted(
                 Text(
                     text = driver.value.toBRLString(),
                     color = MoneyGreenColor,
+                    style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Bold
                 )
 
@@ -111,6 +114,7 @@ fun DriverCardRetracted(
                     Text(
                         text = driver.review.rating.toString(),
                         color = TertiaryColor,
+                        style = MaterialTheme.typography.bodySmall,
                         fontSize = 20.sp
                     )
                     Icon(

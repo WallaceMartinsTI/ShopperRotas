@@ -15,6 +15,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -61,10 +62,11 @@ fun TravelCard(
                 Text(
                     text = ride.driver.name,
                     color = OnPrimaryColor,
-                    fontWeight = FontWeight.Bold
+                    style = MaterialTheme.typography.bodyMedium
                 )
                 Text(
                     text = ride.date.toBrazillianDatetime() ?: ride.date,
+                    style = MaterialTheme.typography.bodySmall,
                     color = OnPrimaryColor
                 )
             }
@@ -79,14 +81,17 @@ fun TravelCard(
             ) {
                 Text(
                     text = ride.distance.toString(),
+                    style = MaterialTheme.typography.bodySmall,
                     color = OnPrimaryColor
                 )
                 Text(
                     text = ride.duration,
+                    style = MaterialTheme.typography.bodySmall,
                     color = OnPrimaryColor
                 )
                 Text(
                     text = ride.value.toBRLString(),
+                    style = MaterialTheme.typography.bodySmall,
                     color = MoneyGreenColor
                 )
             }
@@ -104,6 +109,7 @@ fun TravelCard(
                 Text(
                     text = ride.origin,
                     color = TertiaryColor,
+                    style = MaterialTheme.typography.bodySmall,
                     textAlign = TextAlign.Center
                 )
                 Icon(
@@ -114,6 +120,7 @@ fun TravelCard(
                 Text(
                     text = ride.destination,
                     color = TertiaryColor,
+                    style = MaterialTheme.typography.bodySmall,
                     textAlign = TextAlign.Center
                 )
             }

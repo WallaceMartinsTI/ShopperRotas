@@ -16,6 +16,7 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PersonPinCircle
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -35,9 +36,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.wcsm.shopperrotas.ui.theme.BackgroundColor
 import com.wcsm.shopperrotas.ui.theme.ErrorColor
+import com.wcsm.shopperrotas.ui.theme.PoppinsFontFamily
 import com.wcsm.shopperrotas.ui.theme.ShopperRotasTheme
 import com.wcsm.shopperrotas.ui.theme.TertiaryColor
 import com.wcsm.shopperrotas.ui.theme.White06Color
+import com.wcsm.shopperrotas.utils.Constants
 import kotlinx.coroutines.delay
 
 @Composable
@@ -69,7 +72,7 @@ fun TravelRequestForm(
 
     LaunchedEffect(isClickEnabled) {
         if(!isClickEnabled) {
-            delay(2000)
+            delay(Constants.CLICK_DELAY)
             isClickEnabled = true
         }
     }
@@ -91,7 +94,7 @@ fun TravelRequestForm(
                 Text(
                     text = "Usuário",
                     color = TertiaryColor,
-                    fontWeight = FontWeight.Bold
+                    style = MaterialTheme.typography.bodyMedium
                 )
             },
             placeholder = {
@@ -130,7 +133,7 @@ fun TravelRequestForm(
                 Text(
                     text = "Origem",
                     color = TertiaryColor,
-                    fontWeight = FontWeight.Bold
+                    style = MaterialTheme.typography.bodyMedium
                 )
             },
             placeholder = {
@@ -144,7 +147,7 @@ fun TravelRequestForm(
                 )
             },
             trailingIcon = {
-                if(customerId.isNotEmpty()) {
+                if(origin.isNotEmpty()) {
                     Icon(
                         imageVector = Icons.Default.Clear,
                         contentDescription = "Icone de apagar",
@@ -169,7 +172,7 @@ fun TravelRequestForm(
                 Text(
                     text = "Destino",
                     color = TertiaryColor,
-                    fontWeight = FontWeight.Bold
+                    style = MaterialTheme.typography.bodyMedium
                 )
             },
             placeholder = {
@@ -183,7 +186,7 @@ fun TravelRequestForm(
                 )
             },
             trailingIcon = {
-                if(customerId.isNotEmpty()) {
+                if(destination.isNotEmpty()) {
                     Icon(
                         imageVector = Icons.Default.Clear,
                         contentDescription = "Icone de apagar",
@@ -205,6 +208,7 @@ fun TravelRequestForm(
             Text(
                 text = "Erro: $errorMessage",
                 color = ErrorColor,
+                style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier.width(300.dp)
             )
             Spacer(modifier = Modifier.height(20.dp))
@@ -219,7 +223,10 @@ fun TravelRequestForm(
             },
             enabled = isClickEnabled
         ) {
-            Text("ESTIMAR VALOR")
+            Text(
+                text = "ESTIMAR VALOR",
+                fontFamily = PoppinsFontFamily
+            )
         }
     }
 }

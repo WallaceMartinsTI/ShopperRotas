@@ -14,6 +14,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.wcsm.shopperrotas.ui.theme.BackgroundColor
+import com.wcsm.shopperrotas.ui.theme.PoppinsFontFamily
 import com.wcsm.shopperrotas.ui.theme.PrimaryColor
 import com.wcsm.shopperrotas.ui.theme.ShopperRotasTheme
 import com.wcsm.shopperrotas.ui.theme.SurfaceColor
@@ -54,13 +56,14 @@ fun LeaveAppDialog(
             Text(
                 text = "Shopper Rotas",
                 color = PrimaryColor,
-                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(top = 4.dp, bottom = 16.dp)
             )
 
             Text(
                 text = "Deseja sair do app?",
                 color = Color.White,
+                style = MaterialTheme.typography.bodySmall,
                 fontWeight = FontWeight.SemiBold,
             )
 
@@ -74,7 +77,8 @@ fun LeaveAppDialog(
                 modifier = Modifier.width(150.dp)
             ) {
                 Text(
-                    text = "SAIR DO APP"
+                    text = "SAIR DO APP",
+                    fontFamily = PoppinsFontFamily
                 )
             }
 
@@ -87,7 +91,8 @@ fun LeaveAppDialog(
                 modifier = Modifier.width(150.dp)
             ) {
                 Text(
-                    text = "CANCELAR"
+                    text = "CANCELAR",
+                    fontFamily = PoppinsFontFamily
                 )
             }
         }

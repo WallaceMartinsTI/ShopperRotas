@@ -19,8 +19,14 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,10 +41,13 @@ import com.wcsm.shopperrotas.data.model.Review
 import com.wcsm.shopperrotas.data.model.RideOption
 import com.wcsm.shopperrotas.ui.theme.BackgroundColor
 import com.wcsm.shopperrotas.ui.theme.MoneyGreenColor
+import com.wcsm.shopperrotas.ui.theme.PoppinsFontFamily
 import com.wcsm.shopperrotas.ui.theme.ShopperRotasTheme
 import com.wcsm.shopperrotas.ui.theme.SurfaceColor
 import com.wcsm.shopperrotas.ui.theme.TertiaryColor
+import com.wcsm.shopperrotas.utils.Constants
 import com.wcsm.shopperrotas.utils.toBRLString
+import kotlinx.coroutines.delay
 
 @Composable
 fun DriverCardExpanded(
@@ -46,6 +55,15 @@ fun DriverCardExpanded(
     onChooseDriver: () -> Unit,
     onExpandChange: (Boolean) -> Unit
 ) {
+    var isClickEnabled by remember { mutableStateOf(true) }
+
+    LaunchedEffect(isClickEnabled) {
+        if(!isClickEnabled) {
+            delay(Constants.CLICK_DELAY)
+            isClickEnabled = true
+        }
+    }
+
     ElevatedCard(
         colors = CardDefaults.elevatedCardColors(
             containerColor = SurfaceColor
@@ -73,11 +91,12 @@ fun DriverCardExpanded(
                 ) {
                     Text(
                         text = driver.name,
-                        fontWeight = FontWeight.Bold
+                        style = MaterialTheme.typography.bodyMedium
                     )
 
                     Text(
                         text = driver.vehicle,
+                        style = MaterialTheme.typography.bodySmall
                     )
                 }
 
@@ -94,6 +113,7 @@ fun DriverCardExpanded(
             ) {
                 Text(
                     text = driver.description,
+                    style = MaterialTheme.typography.bodySmall,
                     fontSize = 14.sp
                 )
             }
@@ -115,10 +135,13 @@ fun DriverCardExpanded(
                     Text(
                         text = driver.value.toBRLString(),
                         color = MoneyGreenColor,
-                        fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.bodyMedium,
                         fontSize = 20.sp
                     )
-                    Text("Valor da Corrida")
+                    Text(
+                        text = "Valor da Corrida",
+                        style = MaterialTheme.typography.bodySmall
+                    )
 
                 }
 
@@ -128,6 +151,7 @@ fun DriverCardExpanded(
                     Row {
                         Text(
                             text = driver.review.rating.toString(),
+                            style = MaterialTheme.typography.bodySmall,
                             color = TertiaryColor,
                             fontSize = 24.sp
                         )
@@ -137,7 +161,10 @@ fun DriverCardExpanded(
                             tint = TertiaryColor
                         )
                     }
-                    Text("Avaliação")
+                    Text(
+                        text = "Avaliação",
+                        style = MaterialTheme.typography.bodySmall
+                    )
                 }
             }
 
@@ -149,11 +176,18 @@ fun DriverCardExpanded(
 
             Button(
                 onClick = {
-                    onChooseDriver()
+                    if(isClickEnabled) {
+                        isClickEnabled = false
+                        onChooseDriver()
+                    }
                 },
+                enabled = isClickEnabled,
                 modifier = Modifier.width(200.dp)
             ) {
-                Text("ESCOLHER")
+                Text(
+                    text = "ESCOLHER",
+                    fontFamily = PoppinsFontFamily
+                )
             }
         }
     }

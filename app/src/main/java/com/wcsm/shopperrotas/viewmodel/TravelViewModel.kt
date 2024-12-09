@@ -50,15 +50,20 @@ class TravelViewModel(
     private val _ridesHistory = MutableStateFlow<List<Ride>?>(null)
     val ridesHistory: StateFlow<List<Ride>?> = _ridesHistory.asStateFlow()
 
-    private val _ridesHistoryResponse = MutableStateFlow<Boolean?>(null)
-    val ridesHistoryResponse: StateFlow<Boolean?> = _ridesHistoryResponse.asStateFlow()
-
     fun clearErrorMessage() {
         _errorMessage.value = null
     }
 
+    fun clearRideHistory() {
+        _ridesHistory.value = null
+    }
+
     fun resetEstimatedWithSuccess() {
         _estimatedWithSuccess.value = false
+    }
+
+    fun resetConfirmRideResponse() {
+        _confirmRideResponse.value = null
     }
 
     fun validateLatLongForGoogleMaps(
@@ -143,22 +148,18 @@ class TravelViewModel(
 
                 if (response.isSuccessful) {
                     _ridesHistory.value = response.body()?.rides
-                    _ridesHistoryResponse.value = true
                     _errorMessage.value = null
                 } else {
                     val errorBody = response.errorBody()?.string()
                     val errorDescription = errorBody?.let {
                         JSONObject(it).optString("error_description")
                     }
-                    _ridesHistoryResponse.value = false
                     _errorMessage.value = errorDescription ?: "Erro desconhecido."
                 }
             } catch (e: HttpException) {
                 _errorMessage.value = "Ocorreu um erro, tente mais tarde."
-                _ridesHistoryResponse.value = false
             } catch (e: Exception) {
                 _errorMessage.value = "Ocorreu um erro desconhecido."
-                _ridesHistoryResponse.value = false
             }
         }
     }
