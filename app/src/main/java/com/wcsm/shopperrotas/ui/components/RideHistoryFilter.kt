@@ -27,7 +27,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -38,15 +37,13 @@ import com.wcsm.shopperrotas.data.model.Driver
 import com.wcsm.shopperrotas.ui.theme.ShopperRotasTheme
 import com.wcsm.shopperrotas.ui.theme.SurfaceColor
 import com.wcsm.shopperrotas.ui.theme.White06Color
-import com.wcsm.shopperrotas.utils.Constants
-import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RideHisotryFilter(
     isActionLoading: Boolean,
     onGetAll: (customerId: String, driverId: Int?) -> Unit,
-    onApplyFilter: (customerId: String, driverId: Int) -> Unit
+    onApplyFilter: (customerId: String, driver: Driver) -> Unit
 ) {
     var userId by rememberSaveable { mutableStateOf("") }
     var userIdError by rememberSaveable { mutableStateOf("") }
@@ -55,6 +52,14 @@ fun RideHisotryFilter(
     var selectedDriverId by rememberSaveable { mutableIntStateOf(-1) }
     var selectedDriverName by rememberSaveable { mutableStateOf("Escolha um motorista") }
     var selectedDriverError by rememberSaveable { mutableStateOf("") }
+
+    var selectedDriver: Driver? by rememberSaveable { mutableStateOf(null) }
+
+    LaunchedEffect(selectedDriverId, selectedDriverName) {
+        if(selectedDriverId != -1) {
+            selectedDriver = Driver(selectedDriverId, selectedDriverName)
+        }
+    }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -192,7 +197,7 @@ fun RideHisotryFilter(
                     } else if(selectedDriverId == -1) {
                         selectedDriverError = "Você deve selecionar um motorista."
                     } else {
-                        onApplyFilter(userId, selectedDriverId)
+                        selectedDriver?.let { onApplyFilter(userId, it) }
                     }
                 },
                 enabled = !isActionLoading,

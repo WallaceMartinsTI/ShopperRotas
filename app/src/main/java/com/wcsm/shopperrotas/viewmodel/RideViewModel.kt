@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.wcsm.shopperrotas.data.model.ConfirmRideRequest
 import com.wcsm.shopperrotas.data.model.ConfirmRideResponse
+import com.wcsm.shopperrotas.data.model.Driver
 import com.wcsm.shopperrotas.data.model.Ride
 import com.wcsm.shopperrotas.data.model.RideEstimateRequest
 import com.wcsm.shopperrotas.data.model.RideEstimateResponse
@@ -155,6 +156,35 @@ class RideViewModel @Inject constructor(
 
                 if (response.isSuccessful) {
                     _ridesHistory.value = response.body()?.rides
+                    _errorMessage.value = null
+                } else {
+                    val errorBody = response.errorBody()?.string()
+                    val errorDescription = errorBody?.let {
+                        JSONObject(it).optString("error_description")
+                    }
+                    _errorMessage.value = errorDescription ?: "Erro desconhecido."
+                }
+            } catch (e: HttpException) {
+                _errorMessage.value = "Ocorreu um erro, tente mais tarde."
+            } catch (e: Exception) {
+                _errorMessage.value = "Ocorreu um erro desconhecido."
+            } finally {
+                delay(Constants.CLICK_DELAY)
+                _isActionLoading.value = false
+            }
+        }
+    }
+
+    // Filtering by ID doesn't work
+    fun getFilteredRideHistory(customerId: String, driver: Driver) {
+        viewModelScope.launch {
+            try {
+                val response = travelRepository.ride(customerId, driver.id)
+
+                if (response.isSuccessful) {
+                    _ridesHistory.value = response.body()?.rides?.filter {
+                        it.driver.name == driver.name
+                    }
                     _errorMessage.value = null
                 } else {
                     val errorBody = response.errorBody()?.string()
