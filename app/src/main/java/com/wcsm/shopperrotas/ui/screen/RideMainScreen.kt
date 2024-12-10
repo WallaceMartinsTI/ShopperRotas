@@ -15,7 +15,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,14 +40,12 @@ import com.wcsm.shopperrotas.ui.theme.OnSurfaceColor
 import com.wcsm.shopperrotas.ui.theme.PrimaryColor
 import com.wcsm.shopperrotas.ui.theme.ShopperRotasTheme
 import com.wcsm.shopperrotas.ui.theme.PoppinsFontFamily
-import com.wcsm.shopperrotas.utils.Constants
 import com.wcsm.shopperrotas.viewmodel.RideViewModel
-import kotlinx.coroutines.delay
 
 @Composable
-fun MainScreen(
+fun RideMainScreen(
     navController: NavController,
-    rideViewModel: RideViewModel = hiltViewModel()
+    rideViewModel: RideViewModel
 ) {
     val context = LocalContext.current
 
@@ -104,7 +101,7 @@ fun MainScreen(
             Button(
                 onClick = {
                     rideViewModel.setActionLoading(true)
-                    navController.navigate(Screen.TravelRequest.route)
+                    navController.navigate(Screen.RideRequest.route)
                 },
                 enabled = !isActionLoading
             ) {
@@ -128,9 +125,9 @@ fun MainScreen(
 
 @Preview
 @Composable
-fun MainScreenPreview() {
+fun RideMainScreenPreview() {
     ShopperRotasTheme(dynamicColor = false) {
         val navController = rememberNavController()
-        MainScreen(navController)
+        RideMainScreen(navController, hiltViewModel())
     }
 }

@@ -10,7 +10,9 @@ import com.wcsm.shopperrotas.data.model.RideEstimateRequest
 import com.wcsm.shopperrotas.data.model.RideEstimateResponse
 import com.wcsm.shopperrotas.data.model.RideOption
 import com.wcsm.shopperrotas.data.repository.IRideRepository
+import com.wcsm.shopperrotas.utils.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -27,7 +29,7 @@ class RideViewModel @Inject constructor(
     val estimateResponse: StateFlow<RideEstimateResponse?> = _estimateResponse.asStateFlow()
 
     private val _drivers = MutableStateFlow<List<RideOption>?>(null)
-    val drivers: StateFlow<List<RideOption>??> = _drivers.asStateFlow()
+    val drivers: StateFlow<List<RideOption>?> = _drivers.asStateFlow()
 
     private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage: StateFlow<String?> = _errorMessage.asStateFlow()
@@ -44,7 +46,7 @@ class RideViewModel @Inject constructor(
     private val _ridesHistory = MutableStateFlow<List<Ride>?>(null)
     val ridesHistory: StateFlow<List<Ride>?> = _ridesHistory.asStateFlow()
 
-    private val _isActionLoading = MutableStateFlow<Boolean>(false)
+    private val _isActionLoading = MutableStateFlow(false)
     val isActionLoading: StateFlow<Boolean> = _isActionLoading.asStateFlow()
 
     fun clearErrorMessage() {
@@ -108,6 +110,9 @@ class RideViewModel @Inject constructor(
             } catch (e: Exception) {
                 _errorMessage.value = e.localizedMessage ?: "Ocorreu um erro desconhecido."
                 _estimateResponse.value = null
+            } finally {
+                delay(Constants.CLICK_DELAY)
+                _isActionLoading.value = false
             }
         }
     }
@@ -116,23 +121,29 @@ class RideViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val response = travelRepository.confirm(confirmRideRequest)
-                if(response.success == true) {
-                    _confirmRideResponse.value = response
-                    _errorMessage.value = null
+
+                if (response.isSuccessful) {
+                    response.body()?.let {
+                        _confirmRideResponse.value = it
+                        _errorMessage.value = null
+                    } ?: run {
+                        _confirmRideResponse.value = null
+                        _errorMessage.value = "Erro desconhecido."
+                    }
                 } else {
+                    val errorBody = response.errorBody()?.string()
+                    val errorDescription = errorBody?.let {
+                        JSONObject(it).optString("error_description")
+                    }
+                    _errorMessage.value = errorDescription ?: "Erro desconhecido."
                     _confirmRideResponse.value = null
-                    _errorMessage.value = response.errorDescription ?: "Erro desconhecido."
                 }
-            } catch (e: HttpException) {
-                val errorBody = e.response()?.errorBody()?.string()
-                val errorDescription = errorBody?.let {
-                    JSONObject(it).optString("error_description")
-                }
-                _errorMessage.value = errorDescription ?: "Ocorreu um erro, tente mais tarde."
-                _confirmRideResponse.value = null
             } catch (e: Exception) {
                 _errorMessage.value = e.localizedMessage ?: "Ocorreu um erro desconhecido."
                 _confirmRideResponse.value = null
+            } finally {
+                delay(Constants.CLICK_DELAY)
+                _isActionLoading.value = false
             }
         }
     }
@@ -156,6 +167,9 @@ class RideViewModel @Inject constructor(
                 _errorMessage.value = "Ocorreu um erro, tente mais tarde."
             } catch (e: Exception) {
                 _errorMessage.value = "Ocorreu um erro desconhecido."
+            } finally {
+                delay(Constants.CLICK_DELAY)
+                _isActionLoading.value = false
             }
         }
     }

@@ -44,11 +44,10 @@ import kotlinx.coroutines.delay
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RideHisotryFilter(
+    isActionLoading: Boolean,
     onGetAll: (customerId: String, driverId: Int?) -> Unit,
     onApplyFilter: (customerId: String, driverId: Int) -> Unit
 ) {
-    var isClickEnabled by remember { mutableStateOf(true) }
-
     var userId by rememberSaveable { mutableStateOf("") }
     var userIdError by rememberSaveable { mutableStateOf("") }
     var driversDropdownExpanded by rememberSaveable { mutableStateOf(false) }
@@ -56,13 +55,6 @@ fun RideHisotryFilter(
     var selectedDriverId by rememberSaveable { mutableIntStateOf(-1) }
     var selectedDriverName by rememberSaveable { mutableStateOf("Escolha um motorista") }
     var selectedDriverError by rememberSaveable { mutableStateOf("") }
-
-    LaunchedEffect(isClickEnabled) {
-        if(!isClickEnabled) {
-            delay(Constants.CLICK_DELAY)
-            isClickEnabled = true
-        }
-    }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -193,20 +185,17 @@ fun RideHisotryFilter(
         Row {
             Button(
                 onClick = {
-                    if(isClickEnabled) {
-                        isClickEnabled = false
-                        userIdError = ""
-                        selectedDriverError = ""
-                        if(userId.isEmpty()) {
-                            userIdError = "Você deve informar um ID de usuário."
-                        } else if(selectedDriverId == -1) {
-                            selectedDriverError = "Você deve selecionar um motorista."
-                        } else {
-                            onApplyFilter(userId, selectedDriverId)
-                        }
+                    userIdError = ""
+                    selectedDriverError = ""
+                    if(userId.isEmpty()) {
+                        userIdError = "Você deve informar um ID de usuário."
+                    } else if(selectedDriverId == -1) {
+                        selectedDriverError = "Você deve selecionar um motorista."
+                    } else {
+                        onApplyFilter(userId, selectedDriverId)
                     }
                 },
-                enabled = isClickEnabled,
+                enabled = !isActionLoading,
             ) {
                 Text(
                     text = "APLICAR FILTRO",
@@ -218,18 +207,15 @@ fun RideHisotryFilter(
 
             Button(
                 onClick = {
-                    if(isClickEnabled) {
-                        isClickEnabled = false
-                        userIdError = ""
-                        selectedDriverError = ""
-                        if(userId.isEmpty()) {
-                            userIdError = "Você deve informar um ID de usuário."
-                        } else {
-                            onGetAll(userId, null)
-                        }
+                    userIdError = ""
+                    selectedDriverError = ""
+                    if(userId.isEmpty()) {
+                        userIdError = "Você deve informar um ID de usuário."
+                    } else {
+                        onGetAll(userId, null)
                     }
                 },
-                enabled = isClickEnabled
+                enabled = !isActionLoading
             ) {
                 Text(
                     text = "LISTAS TODAS",
@@ -244,6 +230,6 @@ fun RideHisotryFilter(
 @Composable
 fun TravelHisotryFilterPreview() {
     ShopperRotasTheme(dynamicColor = false) {
-        RideHisotryFilter({ _, _ ->}) { _, _ -> }
+        RideHisotryFilter(false, { _, _ ->}) { _, _ -> }
     }
 }

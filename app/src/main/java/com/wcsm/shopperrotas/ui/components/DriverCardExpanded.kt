@@ -36,6 +36,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.wcsm.shopperrotas.R
 import com.wcsm.shopperrotas.data.model.Review
 import com.wcsm.shopperrotas.data.model.RideOption
@@ -47,23 +49,16 @@ import com.wcsm.shopperrotas.ui.theme.SurfaceColor
 import com.wcsm.shopperrotas.ui.theme.TertiaryColor
 import com.wcsm.shopperrotas.utils.Constants
 import com.wcsm.shopperrotas.utils.toBRLString
+import com.wcsm.shopperrotas.viewmodel.RideViewModel
 import kotlinx.coroutines.delay
 
 @Composable
 fun DriverCardExpanded(
     driver: RideOption,
+    isActionLoading: Boolean,
     onChooseDriver: () -> Unit,
     onExpandChange: (Boolean) -> Unit
 ) {
-    var isClickEnabled by remember { mutableStateOf(true) }
-
-    LaunchedEffect(isClickEnabled) {
-        if(!isClickEnabled) {
-            delay(Constants.CLICK_DELAY)
-            isClickEnabled = true
-        }
-    }
-
     ElevatedCard(
         colors = CardDefaults.elevatedCardColors(
             containerColor = SurfaceColor
@@ -176,12 +171,9 @@ fun DriverCardExpanded(
 
             Button(
                 onClick = {
-                    if(isClickEnabled) {
-                        isClickEnabled = false
-                        onChooseDriver()
-                    }
+                    onChooseDriver()
                 },
-                enabled = isClickEnabled,
+                enabled = !isActionLoading,
                 modifier = Modifier.width(200.dp)
             ) {
                 Text(
@@ -208,8 +200,11 @@ fun DriverCardExpandedPreview() {
             ),
             value = 50.05
         )
-        DriverCardExpanded(driver, {}) {
+        /*DriverCardExpanded(
+            driver = driver,
+            onChooseDriver = {}
+        ) {
 
-        }
+        }*/
     }
 }

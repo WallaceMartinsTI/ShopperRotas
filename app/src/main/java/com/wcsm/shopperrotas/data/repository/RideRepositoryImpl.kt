@@ -17,13 +17,8 @@ class RideRepositoryImpl @Inject constructor(
         return shopperAPI.getRideEstimate(estimateRequest)
     }
 
-    override suspend fun confirm(confirmRideRequest: ConfirmRideRequest): ConfirmRideResponse {
-        val response = shopperAPI.confirmRide(confirmRideRequest)
-        if (response.isSuccessful) {
-            return response.body() ?: ConfirmRideResponse(errorDescription = "Erro desconhecido.")
-        } else {
-            throw HttpException(response)
-        }
+    override suspend fun confirm(confirmRideRequest: ConfirmRideRequest): Response<ConfirmRideResponse> {
+        return shopperAPI.confirmRide(confirmRideRequest)
     }
 
     override suspend fun ride(customerId: String, driverId: Int?): Response<RideResponse> {

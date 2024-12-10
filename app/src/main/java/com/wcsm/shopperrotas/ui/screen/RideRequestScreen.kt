@@ -30,9 +30,9 @@ import com.wcsm.shopperrotas.ui.theme.ShopperRotasTheme
 import com.wcsm.shopperrotas.viewmodel.RideViewModel
 
 @Composable
-fun RideRequest(
+fun RideRequestScreen(
     navController: NavController,
-    rideViewModel: RideViewModel = hiltViewModel()
+    rideViewModel: RideViewModel
 ) {
     val estimatedWithSuccess by rideViewModel.estimatedWithSuccess.collectAsStateWithLifecycle()
     val isActionLoading by rideViewModel.isActionLoading.collectAsStateWithLifecycle()
@@ -43,10 +43,14 @@ fun RideRequest(
         navController.popBackStack()
     }
 
+    LaunchedEffect(Unit) {
+        rideViewModel.setActionLoading(false)
+    }
+
     LaunchedEffect(estimatedWithSuccess) {
         if(estimatedWithSuccess == true) {
             rideViewModel.resetEstimatedWithSuccess()
-            navController.navigate(Screen.TravelOptions.route)
+            navController.navigate(Screen.RideOptions.route)
         }
     }
 
@@ -93,10 +97,10 @@ fun RideRequest(
 
 @Preview
 @Composable
-fun RideRequestPreview() {
+fun RideRequestScreenPreview() {
     ShopperRotasTheme(dynamicColor = false) {
         val navController = rememberNavController()
-        RideRequest(navController)
+        RideRequestScreen(navController, hiltViewModel())
     }
 }
 

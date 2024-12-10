@@ -18,12 +18,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.wcsm.shopperrotas.data.model.RideOption
 import com.wcsm.shopperrotas.ui.theme.ShopperRotasTheme
+import com.wcsm.shopperrotas.viewmodel.RideViewModel
 
 @Composable
 fun DriversAvailable(
     drivers: List<RideOption>?,
+    isActionLoading: Boolean,
     onConfirmDriver: (driver: RideOption) -> Unit,
 ) {
     val expandedStates = remember { mutableStateMapOf<Int, Boolean>() }
@@ -39,6 +42,7 @@ fun DriversAvailable(
                 items(drivers) { driver ->
                     DriverCard(
                         driver = driver,
+                        isActionLoading = isActionLoading,
                         onConfirmDriver = { chosenDriver ->
                             onConfirmDriver(chosenDriver)
                         },
@@ -70,6 +74,6 @@ fun DriversAvailable(
 @Composable
 fun DriversAvailablePreview() {
     ShopperRotasTheme(dynamicColor = false) {
-        DriversAvailable(emptyList()) {}
+        //DriversAvailable(emptyList()) {}
     }
 }

@@ -39,7 +39,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.wcsm.shopperrotas.data.model.ConfirmRideRequest
 import com.wcsm.shopperrotas.data.model.Driver
 import com.wcsm.shopperrotas.ui.components.DriversAvailable
-import com.wcsm.shopperrotas.ui.components.DynamicMap
 import com.wcsm.shopperrotas.ui.model.Screen
 import com.wcsm.shopperrotas.ui.theme.BackgroundColor
 import com.wcsm.shopperrotas.ui.theme.ErrorColor
@@ -50,15 +49,16 @@ import com.wcsm.shopperrotas.utils.revertGetMinutesAndSeconds
 import com.wcsm.shopperrotas.viewmodel.RideViewModel
 
 @Composable
-fun RideOptions(
+fun RideOptionsScreen(
     navController: NavController,
-    rideViewModel: RideViewModel = hiltViewModel()
+    rideViewModel: RideViewModel
 ) {
     val drivers by rideViewModel.drivers.collectAsStateWithLifecycle()
     val estimateResponse by rideViewModel.estimateResponse.collectAsStateWithLifecycle()
     val requestRideData by rideViewModel.requestRideData.collectAsStateWithLifecycle()
     val confirmRideResponse by rideViewModel.confirmRideResponse.collectAsStateWithLifecycle()
     val errorMessage by rideViewModel.errorMessage.collectAsStateWithLifecycle()
+    val isActionLoading by rideViewModel.isActionLoading.collectAsStateWithLifecycle()
 
     val duration by remember { mutableStateOf(estimateResponse?.duration?.getMinutesAndSeconds() ?: "00:00") }
     val distance by remember { mutableStateOf(estimateResponse?.distance?.toString()) }
@@ -93,7 +93,7 @@ fun RideOptions(
     LaunchedEffect(confirmRideResponse) {
         if(confirmRideResponse?.success == true) {
             rideViewModel.resetConfirmRideResponse()
-            navController.navigate(Screen.TravelHistory.route)
+            navController.navigate(Screen.RideHistory.route)
         }
     }
 
@@ -158,7 +158,9 @@ fun RideOptions(
 
             if(isPositionValid) {
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     Text(
@@ -174,7 +176,11 @@ fun RideOptions(
                 HorizontalDivider(color = Color.White)
             }
 
-            DriversAvailable(drivers) { driver ->
+            DriversAvailable(
+                drivers = drivers,
+                isActionLoading = isActionLoading,
+            ) { driver ->
+                rideViewModel.setActionLoading(true)
                 rideViewModel.clearErrorMessage()
 
                 val confirmRide = ConfirmRideRequest(
@@ -195,9 +201,9 @@ fun RideOptions(
 
 @Preview
 @Composable
-fun RideOptionsPreview() {
+fun RideOptionsScreenPreview() {
     ShopperRotasTheme(dynamicColor = false) {
         val navController = rememberNavController()
-        RideOptions(navController = navController)
+        RideOptionsScreen(navController, hiltViewModel())
     }
 }

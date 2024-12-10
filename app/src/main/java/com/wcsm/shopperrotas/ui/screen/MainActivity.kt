@@ -5,7 +5,6 @@ import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -19,7 +18,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.wcsm.shopperrotas.ui.model.Screen
-import com.wcsm.shopperrotas.ui.theme.BackgroundColor
 import com.wcsm.shopperrotas.ui.theme.PrimaryColor
 import com.wcsm.shopperrotas.ui.theme.ShopperRotasTheme
 import com.wcsm.shopperrotas.viewmodel.RideViewModel
@@ -61,26 +59,26 @@ private fun AppNavigation(
         startDestination = Screen.MainScreen.route
     ) {
         composable(route = Screen.MainScreen.route) {
-            MainScreen(
+            RideMainScreen(
                 navController = navController,
                 rideViewModel = rideViewModel
             )
         }
 
-        composable(route = Screen.TravelRequest.route) {
-            RideRequest(
+        composable(route = Screen.RideRequest.route) {
+            RideRequestScreen(
                 navController = navController,
                 rideViewModel = rideViewModel
             )
         }
 
-        composable(route = Screen.TravelOptions.route) {
-            RideOptions(
+        composable(route = Screen.RideOptions.route) {
+            RideOptionsScreen(
                 navController = navController,
                 rideViewModel = rideViewModel
             )
         }
-        composable(route = Screen.TravelHistory.route) {
+        composable(route = Screen.RideHistory.route) {
             RideHistoryScreen(
                 navController = navController,
                 rideViewModel = rideViewModel

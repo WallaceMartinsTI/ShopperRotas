@@ -13,6 +13,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,14 +33,19 @@ import com.wcsm.shopperrotas.viewmodel.RideViewModel
 @Composable
 fun RideHistoryScreen(
     navController: NavController,
-    rideViewModel: RideViewModel = hiltViewModel()
+    rideViewModel: RideViewModel
 ) {
     val riderHistory by rideViewModel.ridesHistory.collectAsStateWithLifecycle()
     val errorMessage by rideViewModel.errorMessage.collectAsStateWithLifecycle()
+    val isActionLoading by rideViewModel.isActionLoading.collectAsStateWithLifecycle()
 
     BackHandler {
         rideViewModel.clearRideHistory()
         navController.navigate(Screen.MainScreen.route)
+    }
+
+    LaunchedEffect(Unit) {
+        rideViewModel.setActionLoading(false)
     }
 
     Surface(
@@ -63,11 +69,14 @@ fun RideHistoryScreen(
             )
 
             RideHisotryFilter(
+                isActionLoading = isActionLoading,
                 onGetAll = { customerId, driverId ->
+                    rideViewModel.setActionLoading(true)
                     rideViewModel.clearErrorMessage()
                     rideViewModel.fetchRidesHistory(customerId, driverId)
                 }
             ) { customerId, driverId ->
+                rideViewModel.setActionLoading(true)
                 rideViewModel.clearErrorMessage()
                 rideViewModel.fetchRidesHistory(customerId, driverId)
             }
@@ -102,6 +111,6 @@ fun RideHistoryScreen(
 fun RideHistoryScreenPreview() {
     ShopperRotasTheme(dynamicColor = false) {
         val navController = rememberNavController()
-        RideHistoryScreen(navController)
+        RideHistoryScreen(navController, hiltViewModel())
     }
 }

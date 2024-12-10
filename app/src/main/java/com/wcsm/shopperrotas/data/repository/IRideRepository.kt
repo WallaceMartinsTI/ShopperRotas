@@ -10,7 +10,7 @@ import retrofit2.Response
 interface IRideRepository {
 
     suspend fun estimate(estimateRequest: RideEstimateRequest) : RideEstimateResponse
-    suspend fun confirm(confirmRideRequest: ConfirmRideRequest) : ConfirmRideResponse
+    suspend fun confirm(confirmRideRequest: ConfirmRideRequest) : Response<ConfirmRideResponse>
     suspend fun ride(customerId: String, driverId: Int?) : Response<RideResponse>
 
 }
