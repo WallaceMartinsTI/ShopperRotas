@@ -212,7 +212,7 @@ fun RideRequestForm(
             enabled = !isActionLoading
         ) {
             Text(
-                text = "ESTIMAR VALOR",
+                text = if(isActionLoading) "CALCULANDO..." else "ESTIMAR VALOR",
                 fontFamily = PoppinsFontFamily
             )
         }

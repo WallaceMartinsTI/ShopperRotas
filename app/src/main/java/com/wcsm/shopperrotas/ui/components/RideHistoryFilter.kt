@@ -31,6 +31,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.wcsm.shopperrotas.data.model.Driver
@@ -45,6 +48,8 @@ fun RideHisotryFilter(
     onGetAll: (customerId: String, driverId: Int?) -> Unit,
     onApplyFilter: (customerId: String, driver: Driver) -> Unit
 ) {
+    val focusManager = LocalFocusManager.current
+
     var userId by rememberSaveable { mutableStateOf("") }
     var userIdError by rememberSaveable { mutableStateOf("") }
     var driversDropdownExpanded by rememberSaveable { mutableStateOf(false) }
@@ -53,11 +58,23 @@ fun RideHisotryFilter(
     var selectedDriverName by rememberSaveable { mutableStateOf("Escolha um motorista") }
     var selectedDriverError by rememberSaveable { mutableStateOf("") }
 
+    val driverFocusRequester = FocusRequester()
+
     var selectedDriver: Driver? by rememberSaveable { mutableStateOf(null) }
+
+    var getAllButtonClicked by rememberSaveable { mutableStateOf(false) }
+    var filterButtonClicked by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(selectedDriverId, selectedDriverName) {
         if(selectedDriverId != -1) {
             selectedDriver = Driver(selectedDriverId, selectedDriverName)
+        }
+    }
+
+    LaunchedEffect(isActionLoading) {
+        if(!isActionLoading) {
+            getAllButtonClicked = false
+            filterButtonClicked = false
         }
     }
 
@@ -106,7 +123,7 @@ fun RideHisotryFilter(
                 }
             ) {
                 CustomTextField(
-                    modifier = Modifier.menuAnchor(),
+                    modifier = Modifier.menuAnchor().focusRequester(driverFocusRequester),
                     value = selectedDriverName,
                     onValueChange = {
                         driversDropdownExpanded = !driversDropdownExpanded
@@ -190,20 +207,26 @@ fun RideHisotryFilter(
         Row {
             Button(
                 onClick = {
+                    filterButtonClicked = true
                     userIdError = ""
                     selectedDriverError = ""
                     if(userId.isEmpty()) {
                         userIdError = "Você deve informar um ID de usuário."
+                        filterButtonClicked = false
                     } else if(selectedDriverId == -1) {
                         selectedDriverError = "Você deve selecionar um motorista."
+                        driverFocusRequester.requestFocus()
+                        filterButtonClicked = false
                     } else {
+                        focusManager.clearFocus()
                         selectedDriver?.let { onApplyFilter(userId, it) }
                     }
                 },
                 enabled = !isActionLoading,
+                modifier = Modifier.width(150.dp)
             ) {
                 Text(
-                    text = "APLICAR FILTRO",
+                    text = if(filterButtonClicked) "FILTRANDO..." else "APLICAR FILTRO",
                     style = MaterialTheme.typography.bodySmall
                 )
             }
@@ -212,18 +235,24 @@ fun RideHisotryFilter(
 
             Button(
                 onClick = {
+                    getAllButtonClicked = true
                     userIdError = ""
                     selectedDriverError = ""
+                    selectedDriverId = -1
+                    selectedDriverName = "Escolha um motorista"
                     if(userId.isEmpty()) {
                         userIdError = "Você deve informar um ID de usuário."
+                        getAllButtonClicked = false
                     } else {
+                        focusManager.clearFocus()
                         onGetAll(userId, null)
                     }
                 },
-                enabled = !isActionLoading
+                enabled = !isActionLoading,
+                modifier = Modifier.width(150.dp)
             ) {
                 Text(
-                    text = "LISTAS TODAS",
+                    text = if(getAllButtonClicked) "BUSCANDO..." else "LISTAS TODAS",
                     style = MaterialTheme.typography.bodySmall
                 )
             }
