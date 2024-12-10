@@ -1,7 +1,5 @@
 package com.wcsm.shopperrotas.ui.components
 
-import android.util.Log
-import android.widget.Space
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -12,14 +10,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.DirectionsCar
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.NoAccounts
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.PersonOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -48,7 +43,7 @@ import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TravelHisotryFilter(
+fun RideHisotryFilter(
     onGetAll: (customerId: String, driverId: Int?) -> Unit,
     onApplyFilter: (customerId: String, driverId: Int) -> Unit
 ) {
@@ -249,6 +244,6 @@ fun TravelHisotryFilter(
 @Composable
 fun TravelHisotryFilterPreview() {
     ShopperRotasTheme(dynamicColor = false) {
-        TravelHisotryFilter({ _, _ ->}) { _, _ -> }
+        RideHisotryFilter({ _, _ ->}) { _, _ -> }
     }
 }

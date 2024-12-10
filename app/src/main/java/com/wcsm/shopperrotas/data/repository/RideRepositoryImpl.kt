@@ -10,9 +10,9 @@ import retrofit2.HttpException
 import retrofit2.Response
 import javax.inject.Inject
 
-class TravelRepositoryImpl @Inject constructor(
+class RideRepositoryImpl @Inject constructor(
     private val shopperAPI: ShopperAPI
-) : ITravelRepository {
+) : IRideRepository {
     override suspend fun estimate(estimateRequest: RideEstimateRequest): RideEstimateResponse {
         return shopperAPI.getRideEstimate(estimateRequest)
     }

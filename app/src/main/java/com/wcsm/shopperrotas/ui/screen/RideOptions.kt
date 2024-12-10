@@ -47,20 +47,18 @@ import com.wcsm.shopperrotas.ui.theme.ShopperRotasTheme
 import com.wcsm.shopperrotas.ui.theme.TertiaryColor
 import com.wcsm.shopperrotas.utils.getMinutesAndSeconds
 import com.wcsm.shopperrotas.utils.revertGetMinutesAndSeconds
-import com.wcsm.shopperrotas.viewmodel.TravelViewModel
+import com.wcsm.shopperrotas.viewmodel.RideViewModel
 
 @Composable
-fun TravelOptions(
+fun RideOptions(
     navController: NavController,
-    travelViewModel: TravelViewModel = hiltViewModel()
+    rideViewModel: RideViewModel = hiltViewModel()
 ) {
-    val TAG = "#-# TESTE #-#"
-
-    val drivers by travelViewModel.drivers.collectAsStateWithLifecycle()
-    val estimateResponse by travelViewModel.estimateResponse.collectAsStateWithLifecycle()
-    val requestRideData by travelViewModel.requestRideData.collectAsStateWithLifecycle()
-    val confirmRideResponse by travelViewModel.confirmRideResponse.collectAsStateWithLifecycle()
-    val errorMessage by travelViewModel.errorMessage.collectAsStateWithLifecycle()
+    val drivers by rideViewModel.drivers.collectAsStateWithLifecycle()
+    val estimateResponse by rideViewModel.estimateResponse.collectAsStateWithLifecycle()
+    val requestRideData by rideViewModel.requestRideData.collectAsStateWithLifecycle()
+    val confirmRideResponse by rideViewModel.confirmRideResponse.collectAsStateWithLifecycle()
+    val errorMessage by rideViewModel.errorMessage.collectAsStateWithLifecycle()
 
     val duration by remember { mutableStateOf(estimateResponse?.duration?.getMinutesAndSeconds() ?: "00:00") }
     val distance by remember { mutableStateOf(estimateResponse?.distance?.toString()) }
@@ -83,7 +81,7 @@ fun TravelOptions(
             destinationLatitude = estimateResponse?.destination?.latitude
             destinationLongitude = estimateResponse?.destination?.longitude
 
-            isPositionValid = travelViewModel.validateLatLongForGoogleMaps(
+            isPositionValid = rideViewModel.validateLatLongForGoogleMaps(
                 originLatitude = originLatitude,
                 originLongitude = originLongitude,
                 destinationLatitude = destinationLatitude,
@@ -94,7 +92,7 @@ fun TravelOptions(
 
     LaunchedEffect(confirmRideResponse) {
         if(confirmRideResponse?.success == true) {
-            travelViewModel.resetConfirmRideResponse()
+            rideViewModel.resetConfirmRideResponse()
             navController.navigate(Screen.TravelHistory.route)
         }
     }
@@ -122,7 +120,7 @@ fun TravelOptions(
                 if(isPositionValid) {
                     val originLatLnt = LatLng(originLatitude!!, originLongitude!!)
                     val destinationLatLnt = LatLng(destinationLatitude!!, destinationLongitude!!)
-                    DynamicMap(originLatLnt, destinationLatLnt)
+                    //DynamicMap(originLatLnt, destinationLatLnt)
                 } else {
                     Column(
                         modifier = Modifier
@@ -177,7 +175,7 @@ fun TravelOptions(
             }
 
             DriversAvailable(drivers) { driver ->
-                travelViewModel.clearErrorMessage()
+                rideViewModel.clearErrorMessage()
 
                 val confirmRide = ConfirmRideRequest(
                     customer_id = requestRideData?.customer_id ?: "",
@@ -189,7 +187,7 @@ fun TravelOptions(
                     value = driver.value
                 )
 
-                travelViewModel.sendConfirmRide(confirmRide)
+                rideViewModel.sendConfirmRide(confirmRide)
             }
         }
     }
@@ -197,9 +195,9 @@ fun TravelOptions(
 
 @Preview
 @Composable
-fun TravelOptionsPreview() {
+fun RideOptionsPreview() {
     ShopperRotasTheme(dynamicColor = false) {
         val navController = rememberNavController()
-        TravelOptions(navController = navController)
+        RideOptions(navController = navController)
     }
 }

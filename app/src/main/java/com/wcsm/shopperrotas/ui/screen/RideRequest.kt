@@ -23,28 +23,29 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.wcsm.shopperrotas.ui.components.TravelRequestForm
+import com.wcsm.shopperrotas.ui.components.RideRequestForm
 import com.wcsm.shopperrotas.ui.model.Screen
 import com.wcsm.shopperrotas.ui.theme.BackgroundColor
 import com.wcsm.shopperrotas.ui.theme.ShopperRotasTheme
-import com.wcsm.shopperrotas.viewmodel.TravelViewModel
+import com.wcsm.shopperrotas.viewmodel.RideViewModel
 
 @Composable
-fun TravelRequest(
+fun RideRequest(
     navController: NavController,
-    travelViewModel: TravelViewModel = hiltViewModel()
+    rideViewModel: RideViewModel = hiltViewModel()
 ) {
-    val estimatedWithSuccess by travelViewModel.estimatedWithSuccess.collectAsStateWithLifecycle()
-    val errorMessage by travelViewModel.errorMessage.collectAsStateWithLifecycle()
+    val estimatedWithSuccess by rideViewModel.estimatedWithSuccess.collectAsStateWithLifecycle()
+    val isActionLoading by rideViewModel.isActionLoading.collectAsStateWithLifecycle()
+    val errorMessage by rideViewModel.errorMessage.collectAsStateWithLifecycle()
 
     BackHandler {
-        travelViewModel.clearErrorMessage()
+        rideViewModel.clearErrorMessage()
         navController.popBackStack()
     }
 
     LaunchedEffect(estimatedWithSuccess) {
         if(estimatedWithSuccess == true) {
-            travelViewModel.resetEstimatedWithSuccess()
+            rideViewModel.resetEstimatedWithSuccess()
             navController.navigate(Screen.TravelOptions.route)
         }
     }
@@ -75,11 +76,13 @@ fun TravelRequest(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            TravelRequestForm(
+            RideRequestForm(
+                isActionLoading = isActionLoading,
                 errorMessage = errorMessage
             ) { customerId, origin, destination ->
-                travelViewModel.clearErrorMessage()
-                travelViewModel.fetchRideEstimate(customerId, origin, destination)
+                rideViewModel.setActionLoading(true)
+                rideViewModel.clearErrorMessage()
+                rideViewModel.fetchRideEstimate(customerId, origin, destination)
 
                 // FOR TEST
                 // navController.navigate(Screen.TravelHistory.route)
@@ -90,10 +93,10 @@ fun TravelRequest(
 
 @Preview
 @Composable
-fun TravelRequestPreview() {
+fun RideRequestPreview() {
     ShopperRotasTheme(dynamicColor = false) {
         val navController = rememberNavController()
-        TravelRequest(navController)
+        RideRequest(navController)
     }
 }
 

@@ -7,7 +7,7 @@ import com.wcsm.shopperrotas.data.model.RideEstimateResponse
 import com.wcsm.shopperrotas.data.model.RideResponse
 import retrofit2.Response
 
-interface ITravelRepository {
+interface IRideRepository {
 
     suspend fun estimate(estimateRequest: RideEstimateRequest) : RideEstimateResponse
     suspend fun confirm(confirmRideRequest: ConfirmRideRequest) : ConfirmRideResponse

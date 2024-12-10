@@ -28,6 +28,8 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.wcsm.shopperrotas.R
@@ -40,26 +42,21 @@ import com.wcsm.shopperrotas.ui.theme.PrimaryColor
 import com.wcsm.shopperrotas.ui.theme.ShopperRotasTheme
 import com.wcsm.shopperrotas.ui.theme.PoppinsFontFamily
 import com.wcsm.shopperrotas.utils.Constants
+import com.wcsm.shopperrotas.viewmodel.RideViewModel
 import kotlinx.coroutines.delay
 
 @Composable
 fun MainScreen(
-    navController: NavController
+    navController: NavController,
+    rideViewModel: RideViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
 
-    var isClickEnabled by remember { mutableStateOf(true) }
+    val isActionLoading by rideViewModel.isActionLoading.collectAsStateWithLifecycle()
     var showBackHandlerDialog by remember { mutableStateOf(false) }
 
     BackHandler {
         showBackHandlerDialog = true
-    }
-
-    LaunchedEffect(isClickEnabled) {
-        if(!isClickEnabled) {
-            delay(Constants.CLICK_DELAY)
-            isClickEnabled = true
-        }
     }
 
     Surface(
@@ -106,12 +103,10 @@ fun MainScreen(
 
             Button(
                 onClick = {
-                    if(isClickEnabled) {
-                        isClickEnabled = false
-                        navController.navigate(Screen.TravelRequest.route)
-                    }
+                    rideViewModel.setActionLoading(true)
+                    navController.navigate(Screen.TravelRequest.route)
                 },
-                enabled = isClickEnabled
+                enabled = !isActionLoading
             ) {
                 Text(
                     text = "SOLICITAR VIAGEM",

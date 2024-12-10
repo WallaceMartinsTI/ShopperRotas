@@ -9,7 +9,7 @@ import com.wcsm.shopperrotas.data.model.Ride
 import com.wcsm.shopperrotas.data.model.RideEstimateRequest
 import com.wcsm.shopperrotas.data.model.RideEstimateResponse
 import com.wcsm.shopperrotas.data.model.RideOption
-import com.wcsm.shopperrotas.data.repository.ITravelRepository
+import com.wcsm.shopperrotas.data.repository.IRideRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,11 +20,9 @@ import retrofit2.HttpException
 import javax.inject.Inject
 
 @HiltViewModel
-class TravelViewModel @Inject constructor(
-    private val travelRepository : ITravelRepository
+class RideViewModel @Inject constructor(
+    private val travelRepository : IRideRepository
 ) : ViewModel() {
-    val TAG = "#-# TESTE #-#"
-
     private val _estimateResponse = MutableStateFlow<RideEstimateResponse?>(null)
     val estimateResponse: StateFlow<RideEstimateResponse?> = _estimateResponse.asStateFlow()
 
@@ -46,6 +44,9 @@ class TravelViewModel @Inject constructor(
     private val _ridesHistory = MutableStateFlow<List<Ride>?>(null)
     val ridesHistory: StateFlow<List<Ride>?> = _ridesHistory.asStateFlow()
 
+    private val _isActionLoading = MutableStateFlow<Boolean>(false)
+    val isActionLoading: StateFlow<Boolean> = _isActionLoading.asStateFlow()
+
     fun clearErrorMessage() {
         _errorMessage.value = null
     }
@@ -60,6 +61,10 @@ class TravelViewModel @Inject constructor(
 
     fun resetConfirmRideResponse() {
         _confirmRideResponse.value = null
+    }
+
+    fun setActionLoading(isLoading: Boolean) {
+        _isActionLoading.value = isLoading
     }
 
     fun validateLatLongForGoogleMaps(
@@ -85,19 +90,15 @@ class TravelViewModel @Inject constructor(
             destination = destination.ifBlank { null }
         )
 
-        Log.i(TAG, "rideRequest: $rideRequest")
-
         viewModelScope.launch {
             try {
                 val response = travelRepository.estimate(rideRequest)
-                Log.i(TAG, "response: $response")
                 _requestRideData.value = rideRequest
                 _estimateResponse.value = response
                 _estimatedWithSuccess.value = true
                 _drivers.value = response.options
                 _errorMessage.value = null
             } catch (e: HttpException) {
-                Log.i(TAG, "e1: $e")
                 val errorBody = e.response()?.errorBody()?.string()
                 val errorDescription = errorBody?.let {
                     JSONObject(it).optString("error_description")
@@ -105,7 +106,6 @@ class TravelViewModel @Inject constructor(
                 _errorMessage.value = errorDescription ?: "Ocorreu um erro, tente mais tarde."
                 _estimateResponse.value = null
             } catch (e: Exception) {
-                Log.i(TAG, "e2: $e")
                 _errorMessage.value = e.localizedMessage ?: "Ocorreu um erro desconhecido."
                 _estimateResponse.value = null
             }

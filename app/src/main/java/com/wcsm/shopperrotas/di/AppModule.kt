@@ -1,8 +1,8 @@
 package com.wcsm.shopperrotas.di
 
 import com.wcsm.shopperrotas.data.api.ShopperAPI
-import com.wcsm.shopperrotas.data.repository.ITravelRepository
-import com.wcsm.shopperrotas.data.repository.TravelRepositoryImpl
+import com.wcsm.shopperrotas.data.repository.IRideRepository
+import com.wcsm.shopperrotas.data.repository.RideRepositoryImpl
 import com.wcsm.shopperrotas.utils.Constants
 import dagger.Module
 import dagger.Provides
@@ -29,8 +29,8 @@ object AppModule {
     }
 
     @Provides
-    fun provideTravelRepository(shopperAPI: ShopperAPI) : ITravelRepository {
-        return TravelRepositoryImpl(shopperAPI)
+    fun provideTravelRepository(shopperAPI: ShopperAPI) : IRideRepository {
+        return RideRepositoryImpl(shopperAPI)
     }
 
 }

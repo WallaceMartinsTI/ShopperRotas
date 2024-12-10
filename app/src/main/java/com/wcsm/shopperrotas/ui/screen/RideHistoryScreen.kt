@@ -22,23 +22,23 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.wcsm.shopperrotas.ui.components.TravelCard
-import com.wcsm.shopperrotas.ui.components.TravelHisotryFilter
+import com.wcsm.shopperrotas.ui.components.RideHisotryFilter
+import com.wcsm.shopperrotas.ui.components.RideHistoryCard
 import com.wcsm.shopperrotas.ui.model.Screen
 import com.wcsm.shopperrotas.ui.theme.BackgroundColor
 import com.wcsm.shopperrotas.ui.theme.ShopperRotasTheme
-import com.wcsm.shopperrotas.viewmodel.TravelViewModel
+import com.wcsm.shopperrotas.viewmodel.RideViewModel
 
 @Composable
-fun TravelHistory(
+fun RideHistoryScreen(
     navController: NavController,
-    travelViewModel: TravelViewModel = hiltViewModel()
+    rideViewModel: RideViewModel = hiltViewModel()
 ) {
-    val riderHistory by travelViewModel.ridesHistory.collectAsStateWithLifecycle()
-    val errorMessage by travelViewModel.errorMessage.collectAsStateWithLifecycle()
+    val riderHistory by rideViewModel.ridesHistory.collectAsStateWithLifecycle()
+    val errorMessage by rideViewModel.errorMessage.collectAsStateWithLifecycle()
 
     BackHandler {
-        travelViewModel.clearRideHistory()
+        rideViewModel.clearRideHistory()
         navController.navigate(Screen.MainScreen.route)
     }
 
@@ -62,14 +62,14 @@ fun TravelHistory(
                 style = MaterialTheme.typography.bodySmall
             )
 
-            TravelHisotryFilter(
+            RideHisotryFilter(
                 onGetAll = { customerId, driverId ->
-                    travelViewModel.clearErrorMessage()
-                    travelViewModel.fetchRidesHistory(customerId, driverId)
+                    rideViewModel.clearErrorMessage()
+                    rideViewModel.fetchRidesHistory(customerId, driverId)
                 }
             ) { customerId, driverId ->
-                travelViewModel.clearErrorMessage()
-                travelViewModel.fetchRidesHistory(customerId, driverId)
+                rideViewModel.clearErrorMessage()
+                rideViewModel.fetchRidesHistory(customerId, driverId)
             }
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -83,7 +83,7 @@ fun TravelHistory(
                 if(!riderHistory.isNullOrEmpty()) {
                     LazyColumn {
                         items(riderHistory!!) { ride ->
-                            TravelCard(ride, modifier = Modifier.padding(bottom = 8.dp))
+                            RideHistoryCard(ride, modifier = Modifier.padding(bottom = 8.dp))
                         }
                     }
                 } else {
@@ -99,9 +99,9 @@ fun TravelHistory(
 
 @Preview
 @Composable
-fun TravelHistoryPreview() {
+fun RideHistoryScreenPreview() {
     ShopperRotasTheme(dynamicColor = false) {
         val navController = rememberNavController()
-        TravelHistory(navController)
+        RideHistoryScreen(navController)
     }
 }

@@ -5,6 +5,7 @@ import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -18,9 +19,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.wcsm.shopperrotas.ui.model.Screen
+import com.wcsm.shopperrotas.ui.theme.BackgroundColor
 import com.wcsm.shopperrotas.ui.theme.PrimaryColor
 import com.wcsm.shopperrotas.ui.theme.ShopperRotasTheme
-import com.wcsm.shopperrotas.viewmodel.TravelViewModel
+import com.wcsm.shopperrotas.viewmodel.RideViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -50,7 +52,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 private fun AppNavigation(
-    travelViewModel: TravelViewModel = hiltViewModel()
+    rideViewModel: RideViewModel = hiltViewModel()
 ) {
     val navController = rememberNavController()
 
@@ -59,26 +61,29 @@ private fun AppNavigation(
         startDestination = Screen.MainScreen.route
     ) {
         composable(route = Screen.MainScreen.route) {
-            MainScreen(navController = navController)
+            MainScreen(
+                navController = navController,
+                rideViewModel = rideViewModel
+            )
         }
 
         composable(route = Screen.TravelRequest.route) {
-            TravelRequest(
+            RideRequest(
                 navController = navController,
-                travelViewModel = travelViewModel
+                rideViewModel = rideViewModel
             )
         }
 
         composable(route = Screen.TravelOptions.route) {
-            TravelOptions(
+            RideOptions(
                 navController = navController,
-                travelViewModel = travelViewModel
+                rideViewModel = rideViewModel
             )
         }
         composable(route = Screen.TravelHistory.route) {
-            TravelHistory(
+            RideHistoryScreen(
                 navController = navController,
-                travelViewModel = travelViewModel
+                rideViewModel = rideViewModel
             )
         }
     }
