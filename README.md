@@ -39,4 +39,10 @@ O aplicativo foi desenvolvido para a plataforma Android utilizando as seguintes 
 - `Hilt (Injeção de Dependências);`
 - `JUnit, Mockito (Testes Unitários);`
 
+## 🧾 Notas Finais
+
+Desenvolver o **Shopper Rotas** foi uma experiência desafiadora e enriquecedora. Este projeto me permitiu consolidar meus conhecimentos em tecnologias modernas, como o Jetpack Compose, e no consumo eficiente de APIs. Apesar dos desafios enfrentados ao longo do desenvolvimento, fiquei extremamente satisfeito com o resultado alcançado.
+
+Caso deseje acompanhar o processo de desenvolvimento, consulte a aba "Issues" deste repositório, onde documentei algumas etapas de desenvolvimento.
+
 <br />
