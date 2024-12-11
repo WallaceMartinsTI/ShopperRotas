@@ -32,6 +32,8 @@ import com.wcsm.shopperrotas.ui.theme.OnSurfaceColor
 import com.wcsm.shopperrotas.ui.theme.ShopperRotasTheme
 import com.wcsm.shopperrotas.ui.theme.SurfaceColor
 import com.wcsm.shopperrotas.ui.theme.TertiaryColor
+import com.wcsm.shopperrotas.utils.distanceDoubleToKmString
+import com.wcsm.shopperrotas.utils.getMinutesAndSeconds
 import com.wcsm.shopperrotas.utils.toBRLString
 import com.wcsm.shopperrotas.utils.toBrazillianDatetime
 
@@ -79,18 +81,18 @@ fun RideHistoryCard(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = ride.distance.toString(),
+                    text = ride.distance.distanceDoubleToKmString(),
                     style = MaterialTheme.typography.bodySmall,
                     color = OnPrimaryColor
                 )
                 Text(
-                    text = ride.duration,
+                    text = "Duração: ${ride.duration}",
                     style = MaterialTheme.typography.bodySmall,
                     color = OnPrimaryColor
                 )
                 Text(
                     text = ride.value.toBRLString(),
-                    style = MaterialTheme.typography.bodySmall,
+                    style = MaterialTheme.typography.bodyMedium,
                     color = MoneyGreenColor
                 )
             }

@@ -21,6 +21,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -39,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import com.wcsm.shopperrotas.data.dto.Driver
 import com.wcsm.shopperrotas.ui.theme.ShopperRotasTheme
 import com.wcsm.shopperrotas.ui.theme.SurfaceColor
+import com.wcsm.shopperrotas.ui.theme.TertiaryColor
 import com.wcsm.shopperrotas.ui.theme.White06Color
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -88,7 +90,11 @@ fun RideHisotryFilter(
                 userId = it
             },
             label = {
-                Text("Usuário")
+                Text(
+                    text = "Usuário",
+                    color = TertiaryColor,
+                    style = MaterialTheme.typography.bodyMedium
+                )
             },
             placeholder = {
                 Text("Informe o ID do usuário.")
@@ -123,13 +129,19 @@ fun RideHisotryFilter(
                 }
             ) {
                 CustomTextField(
-                    modifier = Modifier.menuAnchor().focusRequester(driverFocusRequester),
+                    modifier = Modifier
+                        .menuAnchor(MenuAnchorType.PrimaryEditable, true)
+                        .focusRequester(driverFocusRequester),
                     value = selectedDriverName,
                     onValueChange = {
                         driversDropdownExpanded = !driversDropdownExpanded
                     },
                     label = {
-                        Text("Motorista")
+                        Text(
+                            text = "Motorista",
+                            color = TertiaryColor,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
                     },
                     trailingIcon = {
                         Icon(

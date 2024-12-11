@@ -32,3 +32,16 @@ fun String.toBrazillianDatetime(): String? {
         null
     }
 }
+
+fun Int.distanceIntToKmString() : String {
+    return if (this > 1000) {
+        val km = this / 1000.0
+        "%.2f Km".format(km).replace('.', ',')
+    } else {
+        "$this metros"
+    }
+}
+
+fun Double.distanceDoubleToKmString() : String {
+    return "%.2f Km".format(this).replace('.', ',')
+}

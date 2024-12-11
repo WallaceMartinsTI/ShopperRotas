@@ -39,11 +39,13 @@ import com.google.android.gms.maps.model.LatLng
 import com.wcsm.shopperrotas.data.dto.ConfirmRideRequest
 import com.wcsm.shopperrotas.data.dto.Driver
 import com.wcsm.shopperrotas.ui.components.DriversAvailable
+import com.wcsm.shopperrotas.ui.components.DynamicMap
 import com.wcsm.shopperrotas.ui.model.Screen
 import com.wcsm.shopperrotas.ui.theme.BackgroundColor
 import com.wcsm.shopperrotas.ui.theme.ErrorColor
 import com.wcsm.shopperrotas.ui.theme.ShopperRotasTheme
 import com.wcsm.shopperrotas.ui.theme.TertiaryColor
+import com.wcsm.shopperrotas.utils.distanceIntToKmString
 import com.wcsm.shopperrotas.utils.getMinutesAndSeconds
 import com.wcsm.shopperrotas.utils.revertGetMinutesAndSeconds
 import com.wcsm.shopperrotas.viewmodel.RideViewModel
@@ -61,7 +63,7 @@ fun RideOptionsScreen(
     val isActionLoading by rideViewModel.isActionLoading.collectAsStateWithLifecycle()
 
     val duration by remember { mutableStateOf(estimateResponse?.duration?.getMinutesAndSeconds() ?: "00:00") }
-    val distance by remember { mutableStateOf(estimateResponse?.distance?.toString()) }
+    val distance by remember { mutableStateOf(estimateResponse?.distance) }
 
     var originLatitude: Double? by remember { mutableStateOf(null) }
     var originLongitude: Double? by remember { mutableStateOf(null) }
@@ -120,7 +122,7 @@ fun RideOptionsScreen(
                 if(isPositionValid) {
                     val originLatLnt = LatLng(originLatitude!!, originLongitude!!)
                     val destinationLatLnt = LatLng(destinationLatitude!!, destinationLongitude!!)
-                    //DynamicMap(originLatLnt, destinationLatLnt)
+                    DynamicMap(originLatLnt, destinationLatLnt)
                 } else {
                     Column(
                         modifier = Modifier
@@ -168,7 +170,7 @@ fun RideOptionsScreen(
                         style = MaterialTheme.typography.bodySmall
                     )
                     Text(
-                        text = "Distância: $distance",
+                        text = "Distância: ${distance?.distanceIntToKmString() ?: 0}",
                         style = MaterialTheme.typography.bodySmall
                     )
                 }
@@ -187,7 +189,7 @@ fun RideOptionsScreen(
                     customer_id = requestRideData?.customer_id ?: "",
                     origin = requestRideData?.origin ?: "",
                     destination = requestRideData?.destination ?: "",
-                    distance = distance?.toDoubleOrNull() ?: 1.0,
+                    distance = distance ?: 0,
                     duration = duration.revertGetMinutesAndSeconds(),
                     driver = Driver(driver.id, driver.name),
                     value = driver.value

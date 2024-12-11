@@ -18,7 +18,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,8 +34,6 @@ import com.wcsm.shopperrotas.ui.theme.PoppinsFontFamily
 import com.wcsm.shopperrotas.ui.theme.ShopperRotasTheme
 import com.wcsm.shopperrotas.ui.theme.TertiaryColor
 import com.wcsm.shopperrotas.ui.theme.White06Color
-import com.wcsm.shopperrotas.utils.Constants
-import kotlinx.coroutines.delay
 
 @Composable
 fun RideRequestForm(
@@ -46,27 +43,38 @@ fun RideRequestForm(
     onSubmit: (customerId: String, origin: String, destination: String) -> Unit,
 ) {
 
-/*
+    /*  NOTE
+    *   Below are values to avoid the need to write
+    *   in the input (used to speed up testing)
+    */
+
+    // RETURN WITH 3 AVAILABLE DRIVERS
 
     var customerId by remember { mutableStateOf("Qualquer") }
     var origin by remember { mutableStateOf("Av. Pres. Kenedy, 2385 - Remédios, Osasco - SP, 02675-031") }
     var destination by remember { mutableStateOf("Av. Paulista, 1538 - Bela Vista, São Paulo - SP, 01310-200") }
-*/
 
 
-
-/*
-
-    var customerId by remember { mutableStateOf("Qualquer") }
-    var origin by remember { mutableStateOf("Qualquer1") }
-    var destination by remember { mutableStateOf("Qualquer2") }
-
-*/
-
-
+    // RETURN WITH 2 AVAILABLE DRIVERS
+    /*
     var customerId by remember { mutableStateOf("Qualquer") }
     var origin by remember { mutableStateOf("Av. Thomas Edison, 365 - Barra Funda, São Paulo - SP, 01140-000") }
     var destination by remember { mutableStateOf("Av. Paulista, 1538 - Bela Vista, São Paulo - SP, 01310-200") }
+    */
+
+    // RETURN WITH 1 AVAILABLE DRIVER
+    /*
+    var customerId by remember { mutableStateOf("Qualquer") }
+    var origin by remember { mutableStateOf("Av. Brasil, 2033 - Jardim America, São Paulo - SP, 01431-001") }
+    var destination by remember { mutableStateOf("Av. Paulista, 1538 - Bela Vista, São Paulo - SP, 01310-200") }
+    */
+
+    // RETURN WITH NO AVAILABLE DRIVERS
+    /*
+    var customerId by remember { mutableStateOf("Qualquer") }
+    var origin by remember { mutableStateOf("Qualquer1") }
+    var destination by remember { mutableStateOf("Qualquer2") }
+    */
 
     Column(
         modifier = Modifier
