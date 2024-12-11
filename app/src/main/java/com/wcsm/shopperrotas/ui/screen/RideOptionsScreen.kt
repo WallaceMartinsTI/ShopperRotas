@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOff
+import androidx.compose.material.icons.filled.Route
+import androidx.compose.material.icons.filled.WatchLater
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -45,6 +47,7 @@ import com.wcsm.shopperrotas.ui.theme.BackgroundColor
 import com.wcsm.shopperrotas.ui.theme.ErrorColor
 import com.wcsm.shopperrotas.ui.theme.ShopperRotasTheme
 import com.wcsm.shopperrotas.ui.theme.TertiaryColor
+import com.wcsm.shopperrotas.ui.theme.White06Color
 import com.wcsm.shopperrotas.utils.distanceIntToKmString
 import com.wcsm.shopperrotas.utils.getMinutesAndSeconds
 import com.wcsm.shopperrotas.utils.revertGetMinutesAndSeconds
@@ -165,14 +168,34 @@ fun RideOptionsScreen(
                         .padding(vertical = 8.dp),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    Text(
-                        text = "Duração: $duration",
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                    Text(
-                        text = "Distância: ${distance?.distanceIntToKmString() ?: 0}",
-                        style = MaterialTheme.typography.bodySmall
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.WatchLater,
+                            contentDescription = "Icone de relógio",
+                            tint = White06Color
+                        )
+                        Text(
+                            text = "Duração: $duration",
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Route,
+                            contentDescription = "Icone de rota",
+                            tint = White06Color
+                        )
+                        Text(
+                            text = "Distância: ${distance?.distanceIntToKmString() ?: 0}",
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
                 }
             } else {
                 HorizontalDivider(color = Color.White)

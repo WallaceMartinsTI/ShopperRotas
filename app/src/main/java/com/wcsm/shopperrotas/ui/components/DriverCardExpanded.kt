@@ -1,6 +1,7 @@
 package com.wcsm.shopperrotas.ui.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AttachMoney
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
@@ -124,7 +126,6 @@ fun DriverCardExpanded(
                         text = "Valor da Corrida",
                         style = MaterialTheme.typography.bodySmall
                     )
-
                 }
 
                 Column(
@@ -187,11 +188,12 @@ fun DriverCardExpandedPreview() {
             ),
             value = 50.05
         )
-        /*DriverCardExpanded(
+        DriverCardExpanded(
             driver = driver,
+            isActionLoading = false,
             onChooseDriver = {}
         ) {
 
-        }*/
+        }
     }
 }

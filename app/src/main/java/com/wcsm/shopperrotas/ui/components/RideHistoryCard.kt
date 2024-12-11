@@ -12,9 +12,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.AttachMoney
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.PersonPinCircle
 import androidx.compose.material.icons.filled.Route
+import androidx.compose.material.icons.filled.Timer
+import androidx.compose.material.icons.filled.WatchLater
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.HorizontalDivider
@@ -128,8 +133,8 @@ fun RideHistoryCard(
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     Icon(
-                        imageVector = Icons.Default.Route,
-                        contentDescription = "Icone de rota",
+                        imageVector = Icons.Default.WatchLater,
+                        contentDescription = "Icone de relógio",
                         tint = OnPrimaryColor
                     )
                     Text(
@@ -147,32 +152,56 @@ fun RideHistoryCard(
             }
 
             Spacer(modifier = Modifier.height(8.dp))
+
             HorizontalDivider(thickness = 1.dp, color = OnSurfaceColor)
 
             Spacer(modifier = Modifier.height(8.dp))
+
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Text(
-                    text = ride.origin,
-                    color = TertiaryColor,
-                    style = MaterialTheme.typography.bodySmall,
-                    textAlign = TextAlign.Center
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.PersonPinCircle,
+                        contentDescription = "Icone de localizacao de destino",
+                        tint = TertiaryColor
+                    )
+                    Text(
+                        text = ride.origin,
+                        color = TertiaryColor,
+                        style = MaterialTheme.typography.bodySmall,
+                        textAlign = TextAlign.Center
+                    )
+                }
+
                 Icon(
                     imageVector = Icons.Default.KeyboardArrowDown,
                     contentDescription = null,
                     tint = OnPrimaryColor
                 )
-                Text(
-                    text = ride.destination,
-                    color = TertiaryColor,
-                    style = MaterialTheme.typography.bodySmall,
-                    textAlign = TextAlign.Center
-                )
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.LocationOn,
+                        contentDescription = "Icone de localizacao de destino",
+                        tint = TertiaryColor
+                    )
+                    Text(
+                        text = ride.destination,
+                        color = TertiaryColor,
+                        style = MaterialTheme.typography.bodySmall,
+                        textAlign = TextAlign.Center
+                    )
+                }
             }
         }
     }
