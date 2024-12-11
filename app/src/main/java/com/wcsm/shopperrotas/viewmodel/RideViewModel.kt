@@ -1,18 +1,18 @@
 package com.wcsm.shopperrotas.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.wcsm.shopperrotas.data.model.ConfirmRideRequest
-import com.wcsm.shopperrotas.data.model.ConfirmRideResponse
-import com.wcsm.shopperrotas.data.model.Driver
-import com.wcsm.shopperrotas.data.model.Ride
-import com.wcsm.shopperrotas.data.model.RideEstimateRequest
-import com.wcsm.shopperrotas.data.model.RideEstimateResponse
-import com.wcsm.shopperrotas.data.model.RideOption
+import com.wcsm.shopperrotas.data.dto.ConfirmRideRequest
+import com.wcsm.shopperrotas.data.dto.ConfirmRideResponse
+import com.wcsm.shopperrotas.data.dto.Driver
+import com.wcsm.shopperrotas.data.dto.Ride
+import com.wcsm.shopperrotas.data.dto.RideEstimateRequest
+import com.wcsm.shopperrotas.data.dto.RideEstimateResponse
+import com.wcsm.shopperrotas.data.dto.RideOption
 import com.wcsm.shopperrotas.data.repository.IRideRepository
 import com.wcsm.shopperrotas.utils.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -24,7 +24,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RideViewModel @Inject constructor(
-    private val travelRepository : IRideRepository
+    private val rideRepository : IRideRepository
 ) : ViewModel() {
     private val _estimateResponse = MutableStateFlow<RideEstimateResponse?>(null)
     val estimateResponse: StateFlow<RideEstimateResponse?> = _estimateResponse.asStateFlow()
@@ -93,9 +93,9 @@ class RideViewModel @Inject constructor(
             destination = destination.ifBlank { null }
         )
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
-                val response = travelRepository.estimate(rideRequest)
+                val response = rideRepository.estimate(rideRequest)
                 _requestRideData.value = rideRequest
                 _estimateResponse.value = response
                 _estimatedWithSuccess.value = true
@@ -119,9 +119,9 @@ class RideViewModel @Inject constructor(
     }
 
     fun sendConfirmRide(confirmRideRequest: ConfirmRideRequest) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
-                val response = travelRepository.confirm(confirmRideRequest)
+                val response = rideRepository.confirm(confirmRideRequest)
 
                 if (response.isSuccessful) {
                     response.body()?.let {
@@ -150,9 +150,9 @@ class RideViewModel @Inject constructor(
     }
 
     fun fetchRidesHistory(customerId: String, driverId: Int?) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
-                val response = travelRepository.ride(customerId, driverId)
+                val response = rideRepository.ride(customerId, driverId)
 
                 if (response.isSuccessful) {
                     _ridesHistory.value = response.body()?.rides
@@ -177,9 +177,9 @@ class RideViewModel @Inject constructor(
 
     // Filtering by ID doesn't work
     fun getFilteredRideHistory(customerId: String, driver: Driver) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
-                val response = travelRepository.ride(customerId, driver.id)
+                val response = rideRepository.ride(customerId, driver.id)
 
                 if (response.isSuccessful) {
                     _ridesHistory.value = response.body()?.rides?.filter {

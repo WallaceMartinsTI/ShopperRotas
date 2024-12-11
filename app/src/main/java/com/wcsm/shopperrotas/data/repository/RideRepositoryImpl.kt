@@ -1,12 +1,14 @@
 package com.wcsm.shopperrotas.data.repository
 
 import com.wcsm.shopperrotas.data.api.ShopperAPI
-import com.wcsm.shopperrotas.data.model.ConfirmRideRequest
-import com.wcsm.shopperrotas.data.model.ConfirmRideResponse
-import com.wcsm.shopperrotas.data.model.RideEstimateRequest
-import com.wcsm.shopperrotas.data.model.RideEstimateResponse
-import com.wcsm.shopperrotas.data.model.RideResponse
-import retrofit2.HttpException
+import com.wcsm.shopperrotas.data.dto.ConfirmRideRequest
+import com.wcsm.shopperrotas.data.dto.ConfirmRideResponse
+import com.wcsm.shopperrotas.data.dto.Location
+import com.wcsm.shopperrotas.data.dto.Review
+import com.wcsm.shopperrotas.data.dto.RideEstimateRequest
+import com.wcsm.shopperrotas.data.dto.RideEstimateResponse
+import com.wcsm.shopperrotas.data.dto.RideOption
+import com.wcsm.shopperrotas.data.dto.RideResponse
 import retrofit2.Response
 import javax.inject.Inject
 

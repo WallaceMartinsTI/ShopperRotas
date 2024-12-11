@@ -99,6 +99,18 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    // Biblioteca Truth
+    testImplementation("com.google.truth:truth:1.4.4")
+
+    // Coroutine Test
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0")
+
+    // Mockito
+    testImplementation("org.mockito:mockito-core:5.5.0")
+
+    // Turbine for Kotlin Flow testing
+    testImplementation("app.cash.turbine:turbine:1.2.0")
 }
 
 // Allow references to generated code

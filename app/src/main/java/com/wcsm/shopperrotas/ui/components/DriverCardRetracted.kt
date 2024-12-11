@@ -31,8 +31,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.wcsm.shopperrotas.R
-import com.wcsm.shopperrotas.data.model.Review
-import com.wcsm.shopperrotas.data.model.RideOption
+import com.wcsm.shopperrotas.data.dto.Review
+import com.wcsm.shopperrotas.data.dto.RideOption
 import com.wcsm.shopperrotas.ui.theme.MoneyGreenColor
 import com.wcsm.shopperrotas.ui.theme.ShopperRotasTheme
 import com.wcsm.shopperrotas.ui.theme.SurfaceColor

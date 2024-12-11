@@ -36,8 +36,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.maps.model.LatLng
-import com.wcsm.shopperrotas.data.model.ConfirmRideRequest
-import com.wcsm.shopperrotas.data.model.Driver
+import com.wcsm.shopperrotas.data.dto.ConfirmRideRequest
+import com.wcsm.shopperrotas.data.dto.Driver
 import com.wcsm.shopperrotas.ui.components.DriversAvailable
 import com.wcsm.shopperrotas.ui.model.Screen
 import com.wcsm.shopperrotas.ui.theme.BackgroundColor

@@ -1,7 +1,6 @@
 package com.wcsm.shopperrotas.ui.components
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,35 +21,23 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.wcsm.shopperrotas.R
-import com.wcsm.shopperrotas.data.model.Review
-import com.wcsm.shopperrotas.data.model.RideOption
-import com.wcsm.shopperrotas.ui.theme.BackgroundColor
+import com.wcsm.shopperrotas.data.dto.Review
+import com.wcsm.shopperrotas.data.dto.RideOption
 import com.wcsm.shopperrotas.ui.theme.MoneyGreenColor
 import com.wcsm.shopperrotas.ui.theme.PoppinsFontFamily
 import com.wcsm.shopperrotas.ui.theme.ShopperRotasTheme
 import com.wcsm.shopperrotas.ui.theme.SurfaceColor
 import com.wcsm.shopperrotas.ui.theme.TertiaryColor
-import com.wcsm.shopperrotas.utils.Constants
 import com.wcsm.shopperrotas.utils.toBRLString
-import com.wcsm.shopperrotas.viewmodel.RideViewModel
-import kotlinx.coroutines.delay
 
 @Composable
 fun DriverCardExpanded(

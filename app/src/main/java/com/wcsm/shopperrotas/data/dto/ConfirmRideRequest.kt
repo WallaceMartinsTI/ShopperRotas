@@ -1,4 +1,4 @@
-package com.wcsm.shopperrotas.data.model
+package com.wcsm.shopperrotas.data.dto
 
 data class ConfirmRideRequest(
     val customer_id: String,

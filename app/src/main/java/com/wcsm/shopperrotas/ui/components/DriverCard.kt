@@ -1,9 +1,7 @@
 package com.wcsm.shopperrotas.ui.components
 
 import androidx.compose.runtime.Composable
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.wcsm.shopperrotas.data.model.RideOption
-import com.wcsm.shopperrotas.viewmodel.RideViewModel
+import com.wcsm.shopperrotas.data.dto.RideOption
 
 @Composable
 fun DriverCard(

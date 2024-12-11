@@ -24,8 +24,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.wcsm.shopperrotas.data.model.Driver
-import com.wcsm.shopperrotas.data.model.Ride
+import com.wcsm.shopperrotas.data.dto.Driver
+import com.wcsm.shopperrotas.data.dto.Ride
 import com.wcsm.shopperrotas.ui.theme.MoneyGreenColor
 import com.wcsm.shopperrotas.ui.theme.OnPrimaryColor
 import com.wcsm.shopperrotas.ui.theme.OnSurfaceColor
