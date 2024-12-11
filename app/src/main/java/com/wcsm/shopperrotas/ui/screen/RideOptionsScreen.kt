@@ -122,7 +122,7 @@ fun RideOptionsScreen(
                 if(isPositionValid) {
                     val originLatLnt = LatLng(originLatitude!!, originLongitude!!)
                     val destinationLatLnt = LatLng(destinationLatitude!!, destinationLongitude!!)
-                    //DynamicMap(originLatLnt, destinationLatLnt)
+                    DynamicMap(originLatLnt, destinationLatLnt)
                 } else {
                     Column(
                         modifier = Modifier

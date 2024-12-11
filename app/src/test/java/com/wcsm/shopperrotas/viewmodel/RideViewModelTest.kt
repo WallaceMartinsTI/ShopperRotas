@@ -54,7 +54,7 @@ class RideViewModelTest {
         val expectedResponse = RideEstimateResponse(
             origin = Location(0.0, 0.0),
             destination = Location(0.0, 0.0),
-            distance = 0.0,
+            distance = 0,
             duration = "",
             options = listOf(
                 RideOption(
@@ -147,7 +147,7 @@ class RideViewModelTest {
             customer_id = "Qualquer1",
             origin = "Qualquer2",
             destination = "Qualquer3",
-            distance = 20.0,
+            distance = 20,
             duration = "",
             driver = Driver(2, "Dominic Toretto"),
             value = 100.09
@@ -174,7 +174,7 @@ class RideViewModelTest {
             customer_id = "Qualquer1",
             origin = "Qualquer2",
             destination = "Qualquer3",
-            distance = 20.0,
+            distance = 20,
             duration = "",
             driver = Driver(2, "Dominic Toretto"),
             value = 100.09

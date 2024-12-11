@@ -1,5 +1,6 @@
 package com.wcsm.shopperrotas.ui.components
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,7 +11,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.Route
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.HorizontalDivider
@@ -21,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -32,6 +37,7 @@ import com.wcsm.shopperrotas.ui.theme.OnSurfaceColor
 import com.wcsm.shopperrotas.ui.theme.ShopperRotasTheme
 import com.wcsm.shopperrotas.ui.theme.SurfaceColor
 import com.wcsm.shopperrotas.ui.theme.TertiaryColor
+import com.wcsm.shopperrotas.ui.theme.White06Color
 import com.wcsm.shopperrotas.utils.distanceDoubleToKmString
 import com.wcsm.shopperrotas.utils.getMinutesAndSeconds
 import com.wcsm.shopperrotas.utils.toBRLString
@@ -60,16 +66,37 @@ fun RideHistoryCard(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(
-                    text = ride.driver.name,
-                    color = OnPrimaryColor,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-                Text(
-                    text = ride.date.toBrazillianDatetime() ?: ride.date,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = OnPrimaryColor
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.AccountCircle,
+                        contentDescription = "Icone de pessoa",
+                        tint = OnPrimaryColor
+                    )
+                    Text(
+                        text = ride.driver.name,
+                        color = OnPrimaryColor,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.CalendarMonth,
+                        contentDescription = "Icone de calendário",
+                        tint = OnPrimaryColor
+                    )
+                    Text(
+                        text = ride.date.toBrazillianDatetime() ?: ride.date,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = OnPrimaryColor
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -80,16 +107,38 @@ fun RideHistoryCard(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(
-                    text = ride.distance.distanceDoubleToKmString(),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = OnPrimaryColor
-                )
-                Text(
-                    text = "Duração: ${ride.duration}",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = OnPrimaryColor
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Route,
+                        contentDescription = "Icone de rota",
+                        tint = OnPrimaryColor
+                    )
+                    Text(
+                        text = ride.distance.distanceDoubleToKmString(),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = OnPrimaryColor
+                    )
+                }
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Route,
+                        contentDescription = "Icone de rota",
+                        tint = OnPrimaryColor
+                    )
+                    Text(
+                        text = "Duração: ${ride.duration}",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = OnPrimaryColor
+                    )
+                }
+
                 Text(
                     text = ride.value.toBRLString(),
                     style = MaterialTheme.typography.bodyMedium,
