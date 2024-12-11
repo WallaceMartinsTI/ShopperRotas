@@ -12,6 +12,13 @@ alt="Shopper Rotas screenshot"
 
 </h1>
 
+<div align="center">
+  <p align="center">Vídeo de Demonstração</p>
+  
+https://github.com/user-attachments/assets/05709080-f17c-4449-8978-596d820a87cf
+
+</div>
+
 ## 🚀 Funcionalidades
 
 Algumas das funcionalidades do aplicativo:
