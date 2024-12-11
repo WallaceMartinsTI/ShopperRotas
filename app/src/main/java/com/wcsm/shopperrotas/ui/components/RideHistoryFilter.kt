@@ -47,6 +47,7 @@ import com.wcsm.shopperrotas.ui.theme.White06Color
 @Composable
 fun RideHisotryFilter(
     isActionLoading: Boolean,
+    isLeavingScreen: Boolean,
     onGetAll: (customerId: String, driverId: Int?) -> Unit,
     onApplyFilter: (customerId: String, driver: Driver) -> Unit
 ) {
@@ -77,6 +78,16 @@ fun RideHisotryFilter(
         if(!isActionLoading) {
             getAllButtonClicked = false
             filterButtonClicked = false
+        }
+    }
+
+    LaunchedEffect(isLeavingScreen) {
+        if(isLeavingScreen) {
+            userId = ""
+            userIdError = ""
+            selectedDriverId = -1
+            selectedDriverName = "Escolha um motorista"
+            selectedDriver = null
         }
     }
 
@@ -274,8 +285,8 @@ fun RideHisotryFilter(
 
 @Preview
 @Composable
-fun TravelHisotryFilterPreview() {
+fun TravelHistoryFilterPreview() {
     ShopperRotasTheme(dynamicColor = false) {
-        RideHisotryFilter(false, { _, _ ->}) { _, _ -> }
+        RideHisotryFilter(false, false, { _, _ ->}) { _, _ -> }
     }
 }

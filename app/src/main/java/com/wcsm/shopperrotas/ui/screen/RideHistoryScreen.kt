@@ -42,8 +42,11 @@ fun RideHistoryScreen(
     val errorMessage by rideViewModel.errorMessage.collectAsStateWithLifecycle()
     val isActionLoading by rideViewModel.isActionLoading.collectAsStateWithLifecycle()
 
+    var isLeavingScreen by remember { mutableStateOf(false) }
+
     BackHandler {
         rideViewModel.clearRideHistory()
+        isLeavingScreen = true
         navController.navigate(Screen.MainScreen.route)
     }
 
@@ -73,11 +76,12 @@ fun RideHistoryScreen(
 
             RideHisotryFilter(
                 isActionLoading = isActionLoading,
+                isLeavingScreen = isLeavingScreen,
                 onGetAll = { customerId, driverId ->
                     rideViewModel.setActionLoading(true)
                     rideViewModel.clearErrorMessage()
                     rideViewModel.fetchRidesHistory(customerId, driverId)
-                }
+                },
             ) { customerId, driver ->
                 rideViewModel.setActionLoading(true)
                 rideViewModel.clearErrorMessage()
