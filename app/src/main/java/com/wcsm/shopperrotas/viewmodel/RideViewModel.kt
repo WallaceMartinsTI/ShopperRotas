@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.wcsm.shopperrotas.data.model.RideConfirmRequest
 import com.wcsm.shopperrotas.data.model.RideEstimateRequest
-import com.wcsm.shopperrotas.data.model.RideEstimateResponse
+import com.wcsm.shopperrotas.data.model.RideResponseState
 import com.wcsm.shopperrotas.data.model.RideRequest
 import com.wcsm.shopperrotas.data.remote.dto.Driver
 import com.wcsm.shopperrotas.data.remote.dto.Ride
@@ -92,17 +92,17 @@ class RideViewModel @Inject constructor(
             destination = destination.ifBlank { null }
         )
 
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             try {
                 when(val rideEstimateResponse = rideRepository.estimate(rideEstimateRequest)) {
-                    is RideEstimateResponse.Success -> {
+                    is RideResponseState.Success -> {
                         _requestRideData.value = rideEstimateRequest
                         _estimateResponse.value = rideEstimateResponse.data
                         _estimatedWithSuccess.value = true
                         _drivers.value = rideEstimateResponse.data.options
                         _errorMessage.value = null
                     }
-                    is RideEstimateResponse.Error -> {
+                    is RideResponseState.Error -> {
                         _errorMessage.value = rideEstimateResponse.errorMessage
                         _estimateResponse.value = null
                     }
@@ -115,14 +115,14 @@ class RideViewModel @Inject constructor(
     }
 
     fun sendConfirmRide(rideConfirmRequest: RideConfirmRequest) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             try {
                 when(val rideConfirmResponse = rideRepository.confirm(rideConfirmRequest)) {
-                    is RideEstimateResponse.Success -> {
+                    is RideResponseState.Success -> {
                         _rideConfirmed.value = rideConfirmResponse.data.success
                         _errorMessage.value = null
                     }
-                    is RideEstimateResponse.Error -> {
+                    is RideResponseState.Error -> {
                         _rideConfirmed.value = false
                         _errorMessage.value = rideConfirmResponse.errorMessage
                     }
@@ -140,14 +140,14 @@ class RideViewModel @Inject constructor(
             driverId = driverId
         )
 
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             try {
                 when(val rideHistoryResponse = rideRepository.ride(rideRequest)) {
-                    is RideEstimateResponse.Success -> {
+                    is RideResponseState.Success -> {
                         _ridesHistory.value = rideHistoryResponse.data.rides
                         _errorMessage.value = null
                     }
-                    is RideEstimateResponse.Error -> {
+                    is RideResponseState.Error -> {
                         _errorMessage.value = rideHistoryResponse.errorMessage
                     }
                 }
@@ -165,16 +165,16 @@ class RideViewModel @Inject constructor(
             driverId = driver.id
         )
 
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             try {
                 when(val rideHistoryResponse = rideRepository.ride(rideRequest)) {
-                    is RideEstimateResponse.Success -> {
+                    is RideResponseState.Success -> {
                         _ridesHistory.value = rideHistoryResponse.data.rides?.filter {
                             it.driver.name == driver.name
                         }
                         _errorMessage.value = null
                     }
-                    is RideEstimateResponse.Error -> {
+                    is RideResponseState.Error -> {
                         _errorMessage.value = rideHistoryResponse.errorMessage
                     }
                 }

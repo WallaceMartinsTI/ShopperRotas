@@ -100,6 +100,9 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    // Core Testing
+    testImplementation("androidx.arch.core:core-testing:2.2.0")
+
     // Biblioteca Truth
     testImplementation("com.google.truth:truth:1.4.4")
 

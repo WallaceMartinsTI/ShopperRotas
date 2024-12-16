@@ -1,11 +1,17 @@
 package com.wcsm.shopperrotas.data.repository
 
 import com.google.common.truth.Truth.assertThat
+import com.wcsm.shopperrotas.data.model.RideConfirmRequest
+import com.wcsm.shopperrotas.data.model.RideConfirmResponse
 import com.wcsm.shopperrotas.data.model.RideEstimateRequest
-import com.wcsm.shopperrotas.data.model.RideEstimateResponse
+import com.wcsm.shopperrotas.data.model.RideRequest
+import com.wcsm.shopperrotas.data.model.RideResponse
+import com.wcsm.shopperrotas.data.model.RideResponseState
 import com.wcsm.shopperrotas.data.remote.api.ShopperAPI
+import com.wcsm.shopperrotas.data.remote.dto.Driver
 import com.wcsm.shopperrotas.data.remote.dto.Location
 import com.wcsm.shopperrotas.data.remote.dto.Review
+import com.wcsm.shopperrotas.data.remote.dto.Ride
 import com.wcsm.shopperrotas.data.remote.dto.RideEstimate
 import com.wcsm.shopperrotas.data.remote.dto.RideOption
 import kotlinx.coroutines.test.runTest
@@ -60,14 +66,13 @@ class RideRepositoryImplTest {
             expectedResponse
         )
 
-        val response = rideRepositoryImpl.estimate(estimateRequest)
         var drivers: List<RideOption>? = null
 
-        when(response) {
-            is RideEstimateResponse.Success -> {
+        when(val response = rideRepositoryImpl.estimate(estimateRequest)) {
+            is RideResponseState.Success -> {
                 drivers = response.data.options
             }
-            is RideEstimateResponse.Error -> {
+            is RideResponseState.Error -> {
                 fail("Response error.")
             }
         }
@@ -134,19 +139,17 @@ class RideRepositoryImplTest {
             expectedResponse
         )
 
-        val response = rideRepositoryImpl.estimate(estimateRequest)
         var drivers: List<RideOption>? = null
 
-        when(response) {
-            is RideEstimateResponse.Success -> {
+        when(val response = rideRepositoryImpl.estimate(estimateRequest)) {
+            is RideResponseState.Success -> {
                 drivers = response.data.options
             }
-            is RideEstimateResponse.Error -> {
+            is RideResponseState.Error -> {
                 fail("Response error.")
             }
         }
 
-        assertThat(drivers).isNotNull()
         assertThat(drivers?.size).isEqualTo(3)
         verify(shopperAPI).getRideEstimate(estimateRequest)
     }
@@ -197,19 +200,17 @@ class RideRepositoryImplTest {
             expectedResponse
         )
 
-        val response = rideRepositoryImpl.estimate(estimateRequest)
         var drivers: List<RideOption>? = null
 
-        when(response) {
-            is RideEstimateResponse.Success -> {
+        when(val response = rideRepositoryImpl.estimate(estimateRequest)) {
+            is RideResponseState.Success -> {
                 drivers = response.data.options
             }
-            is RideEstimateResponse.Error -> {
+            is RideResponseState.Error -> {
                 fail("Response error.")
             }
         }
 
-        assertThat(drivers).isNotNull()
         assertThat(drivers?.size).isEqualTo(2)
         verify(shopperAPI).getRideEstimate(estimateRequest)
     }
@@ -249,19 +250,17 @@ class RideRepositoryImplTest {
             expectedResponse
         )
 
-        val response = rideRepositoryImpl.estimate(estimateRequest)
         var drivers: List<RideOption>? = null
 
-        when(response) {
-            is RideEstimateResponse.Success -> {
+        when(val response = rideRepositoryImpl.estimate(estimateRequest)) {
+            is RideResponseState.Success -> {
                 drivers = response.data.options
             }
-            is RideEstimateResponse.Error -> {
+            is RideResponseState.Error -> {
                 fail("Response error.")
             }
         }
 
-        assertThat(drivers).isNotNull()
         assertThat(drivers?.size).isEqualTo(1)
         verify(shopperAPI).getRideEstimate(estimateRequest)
     }
@@ -290,13 +289,11 @@ class RideRepositoryImplTest {
             expectedResponse
         )
 
-        val response = rideRepositoryImpl.estimate(estimateRequest)
-
-        when(response) {
-            is RideEstimateResponse.Success -> {
+        when(val response = rideRepositoryImpl.estimate(estimateRequest)) {
+            is RideResponseState.Success -> {
                 fail("Expected error response, but got success.")
             }
-            is RideEstimateResponse.Error -> {
+            is RideResponseState.Error -> {
                 assertThat(response.errorMessage).isNotNull()
                 assertThat(response.errorMessage).isNotEmpty()
                 assertThat(response.errorMessage).isEqualTo("Mesmo endereço de origem e destino")
@@ -306,7 +303,120 @@ class RideRepositoryImplTest {
         verify(shopperAPI).getRideEstimate(estimateRequest)
     }
 
-    /*
+    @Test
+    fun `estimate should return error message for empty destination`() = runTest {
+        val estimateRequest = RideEstimateRequest(
+            customer_id = "Qualquer1",
+            origin = "Endereço Teste",
+            destination = ""
+        )
+
+        val errorResponseJson = """
+            {
+                "error_code": "INVALID_DATA",
+                "error_description": "Sem endereço de destino"
+            }
+        """.trimIndent()
+        val responseBody = ResponseBody.create(
+            MediaType.parse("application/json"),
+            errorResponseJson
+        )
+        val expectedResponse = Response.error<RideEstimate>(400, responseBody)
+
+        Mockito.`when`(shopperAPI.getRideEstimate(estimateRequest)).thenReturn(
+            expectedResponse
+        )
+
+        when(val response = rideRepositoryImpl.estimate(estimateRequest)) {
+            is RideResponseState.Success -> {
+                fail("Expected error response, but got success.")
+            }
+            is RideResponseState.Error -> {
+                assertThat(response.errorMessage).isNotNull()
+                assertThat(response.errorMessage).isNotEmpty()
+                assertThat(response.errorMessage).isEqualTo("Sem endereço de destino")
+            }
+        }
+
+        verify(shopperAPI).getRideEstimate(estimateRequest)
+    }
+
+    @Test
+    fun `estimate should return error message for empty origin`() = runTest {
+        val estimateRequest = RideEstimateRequest(
+            customer_id = "Qualquer1",
+            origin = "",
+            destination = "Endereço Teste"
+        )
+
+        val errorResponseJson = """
+            {
+                "error_code": "INVALID_DATA",
+                "error_description": "Sem endereço de origem"
+            }
+        """.trimIndent()
+        val responseBody = ResponseBody.create(
+            MediaType.parse("application/json"),
+            errorResponseJson
+        )
+        val expectedResponse = Response.error<RideEstimate>(400, responseBody)
+
+        Mockito.`when`(shopperAPI.getRideEstimate(estimateRequest)).thenReturn(
+            expectedResponse
+        )
+
+        when(val response = rideRepositoryImpl.estimate(estimateRequest)) {
+            is RideResponseState.Success -> {
+                fail("Expected error response, but got success.")
+            }
+            is RideResponseState.Error -> {
+                assertThat(response.errorMessage).isNotNull()
+                assertThat(response.errorMessage).isNotEmpty()
+                assertThat(response.errorMessage).isEqualTo("Sem endereço de origem")
+            }
+        }
+
+        verify(shopperAPI).getRideEstimate(estimateRequest)
+    }
+
+    @Test
+    fun `estimate should return error message for blank client id`() = runTest {
+        val estimateRequest = RideEstimateRequest(
+            customer_id = "",
+            origin = "Endereço Teste",
+            destination = "Endereço Teste"
+        )
+
+        val errorResponseJson = """
+            {
+                "error_code": "INVALID_DATA",
+                "error_description": "sem id de cliente"
+            }
+        """.trimIndent()
+        val responseBody = ResponseBody.create(
+            MediaType.parse("application/json"),
+            errorResponseJson
+        )
+        val expectedResponse = Response.error<RideEstimate>(400, responseBody)
+
+        Mockito.`when`(shopperAPI.getRideEstimate(estimateRequest)).thenReturn(
+            expectedResponse
+        )
+
+        when(val response = rideRepositoryImpl.estimate(estimateRequest)) {
+            is RideResponseState.Success -> {
+                fail("Expected error response, but got success.")
+            }
+            is RideResponseState.Error -> {
+                assertThat(response.errorMessage).isNotNull()
+                assertThat(response.errorMessage).isNotEmpty()
+                assertThat(response.errorMessage).isEqualTo("sem id de cliente")
+            }
+        }
+
+        verify(shopperAPI).getRideEstimate(estimateRequest)
+    }
+
     @Test
     fun `confirm should return success response`() = runTest {
         val rideConfirmRequest = RideConfirmRequest(
@@ -325,35 +435,309 @@ class RideRepositoryImplTest {
             expectedResponse
         )
 
-        val response = rideRepositoryImpl.confirm(rideConfirmRequest)
-
-        assertThat(response).isEqualTo(expectedResponse)
+        when(val response = rideRepositoryImpl.confirm(rideConfirmRequest)) {
+            is RideResponseState.Success -> {
+                assertThat(response.data.success).isNotNull()
+                assertThat(response.data.success).isTrue()
+            }
+            is RideResponseState.Error -> {
+                fail("Response error.")
+            }
+        }
 
         verify(shopperAPI).confirmRide(rideConfirmRequest)
     }
 
     @Test
-    fun `confirm should return error response`() = runTest {
+    fun `confirm should return error message for invalid distance for this driver`() = runTest {
+        val rideConfirmRequest = RideConfirmRequest(
+            customer_id = "Qualquer1",
+            origin = "Qualquer2",
+            destination = "Qualquer3",
+            distance = 0,
+            duration = "",
+            driver = Driver(2, "Dominic Toretto"),
+            value = 100.09
+        )
+
+        val errorResponseJson = """
+            {
+                "error_code": "INVALID_DISTANCE",
+                "error_description": "quilometragem inválida para o motorista"
+            }
+        """.trimIndent()
+        val responseBody = ResponseBody.create(
+            MediaType.parse("application/json"),
+            errorResponseJson
+        )
+        val expectedResponse = Response.error<RideConfirmResponse>(400, responseBody)
+
+        Mockito.`when`(shopperAPI.confirmRide(rideConfirmRequest)).thenReturn(
+            expectedResponse
+        )
+
+        when(val response = rideRepositoryImpl.confirm(rideConfirmRequest)) {
+            is RideResponseState.Success -> {
+                fail("Expected error response, but got success.")
+            }
+            is RideResponseState.Error -> {
+                assertThat(response.errorMessage).isNotNull()
+                assertThat(response.errorMessage).isNotEmpty()
+                assertThat(response.errorMessage).isEqualTo("quilometragem inválida para o motorista")
+            }
+        }
+
+        verify(shopperAPI).confirmRide(rideConfirmRequest)
+    }
+
+    @Test
+    fun `confirm should return error message for invalid driver`() = runTest {
         val rideConfirmRequest = RideConfirmRequest(
             customer_id = "Qualquer1",
             origin = "Qualquer2",
             destination = "Qualquer3",
             distance = 20,
             duration = "",
-            driver = Driver(2, "Dominic Toretto"),
+            driver = Driver(0, "Dominic Toretto"),
             value = 100.09
         )
-        val expectedResponse = Response.error<RideConfirmResponse>(
-            400, okhttp3.ResponseBody.create(null, "Error")
+
+        val errorResponseJson = """
+            {
+                "error_code": "DRIVER_NOT_FOUND",
+                "error_description": "Motorista não encontrado"
+            }
+        """.trimIndent()
+        val responseBody = ResponseBody.create(
+            MediaType.parse("application/json"),
+            errorResponseJson
         )
+        val expectedResponse = Response.error<RideConfirmResponse>(400, responseBody)
 
         Mockito.`when`(shopperAPI.confirmRide(rideConfirmRequest)).thenReturn(
             expectedResponse
         )
 
-        val response = rideRepositoryImpl.confirm(rideConfirmRequest)
+        when(val response = rideRepositoryImpl.confirm(rideConfirmRequest)) {
+            is RideResponseState.Success -> {
+                fail("Expected error response, but got success.")
+            }
+            is RideResponseState.Error -> {
+                assertThat(response.errorMessage).isNotNull()
+                assertThat(response.errorMessage).isNotEmpty()
+                assertThat(response.errorMessage).isEqualTo("Motorista não encontrado")
+            }
+        }
 
-        assertThat(response).isEqualTo(expectedResponse)
+        verify(shopperAPI).confirmRide(rideConfirmRequest)
+    }
+
+    @Test
+    fun `confirm should return error message for driver not informed`() = runTest {
+        val rideConfirmRequest = RideConfirmRequest(
+            customer_id = "Qualquer1",
+            origin = "Qualquer2",
+            destination = "Qualquer3",
+            distance = 20,
+            duration = "",
+            driver = Driver(null, "Dominic Toretto"),
+            value = 100.09
+        )
+
+        val errorResponseJson = """
+            {
+                "error_code": "INVALID_DATA",
+                "error_description": "Sem motorista selecionado"
+            }
+        """.trimIndent()
+        val responseBody = ResponseBody.create(
+            MediaType.parse("application/json"),
+            errorResponseJson
+        )
+        val expectedResponse = Response.error<RideConfirmResponse>(400, responseBody)
+
+        Mockito.`when`(shopperAPI.confirmRide(rideConfirmRequest)).thenReturn(
+            expectedResponse
+        )
+
+        when(val response = rideRepositoryImpl.confirm(rideConfirmRequest)) {
+            is RideResponseState.Success -> {
+                fail("Expected error response, but got success.")
+            }
+            is RideResponseState.Error -> {
+                assertThat(response.errorMessage).isNotNull()
+                assertThat(response.errorMessage).isNotEmpty()
+                assertThat(response.errorMessage).isEqualTo("Sem motorista selecionado")
+            }
+        }
+
+        verify(shopperAPI).confirmRide(rideConfirmRequest)
+    }
+
+    @Test
+    fun `confirm should return error message for equal addresses`() = runTest {
+        val rideConfirmRequest = RideConfirmRequest(
+            customer_id = "Qualquer1",
+            origin = "Endereço Teste",
+            destination = "Endereço Teste",
+            distance = 20,
+            duration = "",
+            driver = Driver(2, "Dominic Toretto"),
+            value = 100.09
+        )
+
+        val errorResponseJson = """
+            {
+                "error_code": "INVALID_DATA",
+                "error_description": "Mesmo endereço de origem e destino"
+            }
+        """.trimIndent()
+        val responseBody = ResponseBody.create(
+            MediaType.parse("application/json"),
+            errorResponseJson
+        )
+        val expectedResponse = Response.error<RideConfirmResponse>(400, responseBody)
+
+        Mockito.`when`(shopperAPI.confirmRide(rideConfirmRequest)).thenReturn(
+            expectedResponse
+        )
+
+        when(val response = rideRepositoryImpl.confirm(rideConfirmRequest)) {
+            is RideResponseState.Success -> {
+                fail("Expected error response, but got success.")
+            }
+            is RideResponseState.Error -> {
+                assertThat(response.errorMessage).isNotNull()
+                assertThat(response.errorMessage).isNotEmpty()
+                assertThat(response.errorMessage).isEqualTo("Mesmo endereço de origem e destino")
+            }
+        }
+
+        verify(shopperAPI).confirmRide(rideConfirmRequest)
+    }
+
+    @Test
+    fun `confirm should return error message for empty destination`() = runTest {
+        val rideConfirmRequest = RideConfirmRequest(
+            customer_id = "Qualquer1",
+            origin = "Endereço Teste",
+            destination = "",
+            distance = 20,
+            duration = "",
+            driver = Driver(2, "Dominic Toretto"),
+            value = 100.09
+        )
+
+        val errorResponseJson = """
+            {
+                "error_code": "INVALID_DATA",
+                "error_description": "Sem endereço de destino"
+            }
+        """.trimIndent()
+        val responseBody = ResponseBody.create(
+            MediaType.parse("application/json"),
+            errorResponseJson
+        )
+        val expectedResponse = Response.error<RideConfirmResponse>(400, responseBody)
+
+        Mockito.`when`(shopperAPI.confirmRide(rideConfirmRequest)).thenReturn(
+            expectedResponse
+        )
+
+        when(val response = rideRepositoryImpl.confirm(rideConfirmRequest)) {
+            is RideResponseState.Success -> {
+                fail("Expected error response, but got success.")
+            }
+            is RideResponseState.Error -> {
+                assertThat(response.errorMessage).isNotNull()
+                assertThat(response.errorMessage).isNotEmpty()
+                assertThat(response.errorMessage).isEqualTo("Sem endereço de destino")
+            }
+        }
+
+        verify(shopperAPI).confirmRide(rideConfirmRequest)
+    }
+
+    @Test
+    fun `confirm should return error message for empty origin`() = runTest {
+        val rideConfirmRequest = RideConfirmRequest(
+            customer_id = "Qualquer1",
+            origin = "",
+            destination = "Endereço Teste",
+            distance = 20,
+            duration = "",
+            driver = Driver(2, "Dominic Toretto"),
+            value = 100.09
+        )
+
+        val errorResponseJson = """
+            {
+                "error_code": "INVALID_DATA",
+                "error_description": "Sem endereço de origem"
+            }
+        """.trimIndent()
+        val responseBody = ResponseBody.create(
+            MediaType.parse("application/json"),
+            errorResponseJson
+        )
+        val expectedResponse = Response.error<RideConfirmResponse>(400, responseBody)
+
+        Mockito.`when`(shopperAPI.confirmRide(rideConfirmRequest)).thenReturn(
+            expectedResponse
+        )
+
+        when(val response = rideRepositoryImpl.confirm(rideConfirmRequest)) {
+            is RideResponseState.Success -> {
+                fail("Expected error response, but got success.")
+            }
+            is RideResponseState.Error -> {
+                assertThat(response.errorMessage).isNotNull()
+                assertThat(response.errorMessage).isNotEmpty()
+                assertThat(response.errorMessage).isEqualTo("Sem endereço de origem")
+            }
+        }
+
+        verify(shopperAPI).confirmRide(rideConfirmRequest)
+    }
+
+    @Test
+    fun `confirm should return error message for blank client id`() = runTest {
+        val rideConfirmRequest = RideConfirmRequest(
+            customer_id = null,
+            origin = "Qualquer1",
+            destination = "Qualquer2",
+            distance = 20,
+            duration = "",
+            driver = Driver(2, "Dominic Toretto"),
+            value = 100.09
+        )
+
+        val errorResponseJson = """
+            {
+                "error_code": "INVALID_DATA",
+                "error_description": "Sem id do usuário"
+            }
+        """.trimIndent()
+        val responseBody = ResponseBody.create(
+            MediaType.parse("application/json"),
+            errorResponseJson
+        )
+        val expectedResponse = Response.error<RideConfirmResponse>(400, responseBody)
+
+        Mockito.`when`(shopperAPI.confirmRide(rideConfirmRequest)).thenReturn(
+            expectedResponse
+        )
+
+        when(val response = rideRepositoryImpl.confirm(rideConfirmRequest)) {
+            is RideResponseState.Success -> {
+                fail("Expected error response, but got success.")
+            }
+            is RideResponseState.Error -> {
+                assertThat(response.errorMessage).isNotNull()
+                assertThat(response.errorMessage).isNotEmpty()
+                assertThat(response.errorMessage).isEqualTo("Sem id do usuário")
+            }
+        }
 
         verify(shopperAPI).confirmRide(rideConfirmRequest)
     }
@@ -361,7 +745,12 @@ class RideRepositoryImplTest {
     @Test
     fun `ride should return success response with rides list`() = runTest {
         val customerId = "CT01"
-        val driverId = 1
+        val driverId = null
+
+        val rideRequest = RideRequest(
+            customerId = customerId,
+            driverId = driverId
+        )
 
         val expectedResponse = Response.success(
             RideResponse(
@@ -405,53 +794,98 @@ class RideRepositoryImplTest {
             expectedResponse
         )
 
-        val response = rideRepositoryImpl.ride(customerId, driverId)
+        var rides: List<Ride>? = null
 
-        assertThat(response).isEqualTo(expectedResponse)
-        assertThat(response.body()?.rides).isNotNull()
-        assertThat(response.body()?.rides?.size).isEqualTo(3)
-        assertThat(response.body()?.rides?.get(1)?.driver?.name).isEqualTo("Dominic Toretto")
+        when(val response = rideRepositoryImpl.ride(rideRequest)) {
+            is RideResponseState.Success -> {
+                rides = response.data.rides
+            }
+            is RideResponseState.Error -> {
+                fail("Response error.")
+            }
+        }
 
+        assertThat(rides?.size).isEqualTo(3)
         verify(shopperAPI).getHistoryRides(customerId, driverId)
     }
 
     @Test
-    fun `ride should return empty list`() = runTest {
-        val customerId = "CT01"
-        val driverId = 1
-        val expectedResponse = Response.success(
-            RideResponse(customer_id = customerId, rides = emptyList())
-        )
-
-        Mockito.`when`(shopperAPI.getHistoryRides(customerId, driverId)).thenReturn(
-            expectedResponse
-        )
-
-        val response = rideRepositoryImpl.ride(customerId, driverId)
-
-        assertThat(response).isEqualTo(expectedResponse)
-        assertThat(response.body()?.rides).isEmpty()
-
-        verify(shopperAPI).getHistoryRides(customerId, driverId)
-    }
-
-    @Test
-    fun `ride should return error response`() = runTest {
+    fun `ride should return erro message for no rides saved`() = runTest {
         val customerId = "Qualquer1"
         val driverId = null
-        val expectedResponse = Response.error<RideResponse>(
-            400, okhttp3.ResponseBody.create(null, "Error")
+
+        val rideRequest = RideRequest(
+            customerId = customerId,
+            driverId = driverId
         )
+
+        val errorResponseJson = """
+            {
+                "error_code": "NO_RIDES_FOUND",
+                "error_description": "sem corridas salvas"
+            }
+        """.trimIndent()
+        val responseBody = ResponseBody.create(
+            MediaType.parse("application/json"),
+            errorResponseJson
+        )
+        val expectedResponse = Response.error<RideResponse>(400, responseBody)
 
         Mockito.`when`(shopperAPI.getHistoryRides(customerId, driverId)).thenReturn(
             expectedResponse
         )
 
-        val response = rideRepositoryImpl.ride(customerId, driverId)
-
-        assertThat(response.code()).isEqualTo(400)
-        assertThat(response.errorBody()?.string()).isEqualTo("Error")
+        when(val response = rideRepositoryImpl.ride(rideRequest)) {
+            is RideResponseState.Success -> {
+                fail("Expected error response, but got success.")
+            }
+            is RideResponseState.Error -> {
+                assertThat(response.errorMessage).isNotNull()
+                assertThat(response.errorMessage).isNotEmpty()
+                assertThat(response.errorMessage).isEqualTo("sem corridas salvas")
+            }
+        }
 
         verify(shopperAPI).getHistoryRides(customerId, driverId)
-    }*/
+    }
+
+    @Test
+    fun `ride should return erro message for invalid driver`() = runTest {
+        val customerId = "Qualquer1"
+        val driverId = null
+
+        val rideRequest = RideRequest(
+            customerId = customerId,
+            driverId = driverId
+        )
+
+        val errorResponseJson = """
+            {
+                "error_code": "INVALID_DRIVER",
+                "error_description": "motorista inválido"
+            }
+        """.trimIndent()
+        val responseBody = ResponseBody.create(
+            MediaType.parse("application/json"),
+            errorResponseJson
+        )
+        val expectedResponse = Response.error<RideResponse>(400, responseBody)
+
+        Mockito.`when`(shopperAPI.getHistoryRides(customerId, driverId)).thenReturn(
+            expectedResponse
+        )
+
+        when(val response = rideRepositoryImpl.ride(rideRequest)) {
+            is RideResponseState.Success -> {
+                fail("Expected error response, but got success.")
+            }
+            is RideResponseState.Error -> {
+                assertThat(response.errorMessage).isNotNull()
+                assertThat(response.errorMessage).isNotEmpty()
+                assertThat(response.errorMessage).isEqualTo("motorista inválido")
+            }
+        }
+
+        verify(shopperAPI).getHistoryRides(customerId, driverId)
+    }
 }

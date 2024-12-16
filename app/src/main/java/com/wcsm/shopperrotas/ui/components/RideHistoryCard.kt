@@ -75,7 +75,7 @@ fun RideHistoryCard(
                         tint = OnPrimaryColor
                     )
                     Text(
-                        text = ride.driver.name,
+                        text = ride.driver.name ?: "",
                         color = OnPrimaryColor,
                         style = MaterialTheme.typography.bodyMedium
                     )

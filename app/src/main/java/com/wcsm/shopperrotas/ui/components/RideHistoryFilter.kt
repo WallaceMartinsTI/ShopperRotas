@@ -195,7 +195,7 @@ fun RideHisotryFilter(
                         DropdownMenuItem(
                             text = {
                                 Text(
-                                    text = driver.name,
+                                    text = driver.name ?: "",
                                     style = MaterialTheme.typography.bodySmall,
                                     color = White06Color
                                 )
@@ -216,8 +216,8 @@ fun RideHisotryFilter(
                                 }
                             },
                             onClick = {
-                                selectedDriverId = driver.id
-                                selectedDriverName = driver.name
+                                selectedDriverId = driver.id ?: 0
+                                selectedDriverName = driver.name ?: ""
                                 driversDropdownExpanded = false
                             }
                         )
