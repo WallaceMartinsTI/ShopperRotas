@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -25,7 +24,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -64,13 +62,6 @@ fun CustomTextField(
     val colors = OutlinedTextFieldDefaults.colors(
         focusedTextColor = PrimaryColor,
         focusedPlaceholderColor = White06Color
-        //focusedContainerColor = TextFieldBackgroundColor,
-        //unfocusedContainerColor = TextFieldBackgroundColor,
-        //errorContainerColor = TextFieldBackgroundColor,
-        //cursorColor = PrimaryColor,
-        //focusedBorderColor = PrimaryColor,
-        //unfocusedBorderColor = PrimaryColor,
-        //selectionColors = TextSelectionColors(PrimaryColor, Color.Transparent  )
     )
 
     Column(
@@ -148,9 +139,7 @@ fun CustomTextFieldPreview() {
                 },
                 placeholder = {
                     Text(text = "Informe o ID do usuário.")
-                },
-                //isError = text.isEmpty(),
-                //errorMessage = errorMessage
+                }
             )
 
             Spacer(modifier = Modifier.height(16.dp))

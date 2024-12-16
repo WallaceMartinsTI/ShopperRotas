@@ -77,7 +77,7 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:1.5.4")
 
     // Google Maps API
-    implementation("com.google.maps.android:maps-compose:6.4.0")
+    implementation("com.google.maps.android:maps-compose:6.2.1")
 
     // Hilt
     implementation("com.google.dagger:hilt-android:2.48")

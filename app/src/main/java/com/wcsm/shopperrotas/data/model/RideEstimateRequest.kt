@@ -1,7 +1,10 @@
 package com.wcsm.shopperrotas.data.model
 
+import com.google.gson.annotations.SerializedName
+
 data class RideEstimateRequest(
-    val customer_id: String?,
+    @SerializedName("customer_id")
+    val customerId: String?,
     val origin: String?,
     val destination: String?
 )

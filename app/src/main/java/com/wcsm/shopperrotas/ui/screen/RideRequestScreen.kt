@@ -87,9 +87,6 @@ fun RideRequestScreen(
                 rideViewModel.setActionLoading(true)
                 rideViewModel.clearErrorMessage()
                 rideViewModel.fetchRideEstimate(customerId, origin, destination)
-
-                // FOR TEST
-                // navController.navigate(Screen.TravelHistory.route)
             }
         }
     }

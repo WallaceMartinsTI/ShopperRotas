@@ -1,30 +1,27 @@
 package com.wcsm.shopperrotas.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.google.common.truth.Truth.assertThat
-import com.wcsm.shopperrotas.data.remote.dto.Driver
-import com.wcsm.shopperrotas.data.remote.dto.Ride
-import com.wcsm.shopperrotas.data.model.RideResponse
-import com.wcsm.shopperrotas.data.repository.IRideRepository
-import kotlinx.coroutines.test.runTest
-
 import app.cash.turbine.test
+import com.google.common.truth.Truth.assertThat
 import com.wcsm.shopperrotas.data.model.RideConfirmRequest
 import com.wcsm.shopperrotas.data.model.RideConfirmResponse
-import com.wcsm.shopperrotas.data.remote.dto.Location
-import com.wcsm.shopperrotas.data.remote.dto.Review
 import com.wcsm.shopperrotas.data.model.RideEstimateRequest
 import com.wcsm.shopperrotas.data.model.RideRequest
+import com.wcsm.shopperrotas.data.model.RideResponse
 import com.wcsm.shopperrotas.data.model.RideResponseState
+import com.wcsm.shopperrotas.data.remote.dto.Driver
+import com.wcsm.shopperrotas.data.remote.dto.Location
+import com.wcsm.shopperrotas.data.remote.dto.Review
+import com.wcsm.shopperrotas.data.remote.dto.Ride
 import com.wcsm.shopperrotas.data.remote.dto.RideEstimate
 import com.wcsm.shopperrotas.data.remote.dto.RideOption
+import com.wcsm.shopperrotas.data.repository.IRideRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import okhttp3.MediaType
-import okhttp3.ResponseBody
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -35,7 +32,6 @@ import org.mockito.Mockito
 import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
 import org.mockito.junit.MockitoJUnitRunner
-import retrofit2.Response
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(MockitoJUnitRunner::class)
@@ -67,7 +63,7 @@ class RideViewModelTest {
     @Test
     fun `fetchRideEstimate should emit success response`() = runTest {
         val estimateRequest = RideEstimateRequest(
-            customer_id = "Qualquer1",
+            customerId = "Qualquer1",
             origin = "Av. Pres. Kenedy, 2385 - Remédios, Osasco - SP, 02675-031",
             destination = "Av. Paulista, 1538 - Bela Vista, São Paulo - SP, 01310-200"
         )
@@ -123,7 +119,7 @@ class RideViewModelTest {
         )
 
         rideViewModel.fetchRideEstimate(
-            estimateRequest.customer_id!!,
+            estimateRequest.customerId!!,
             estimateRequest.origin!!,
             estimateRequest.destination!!
         )
@@ -144,7 +140,7 @@ class RideViewModelTest {
     @Test
     fun `sendConfirmRide should emit success response`() = runTest {
         val rideConfirmRequest = RideConfirmRequest(
-            customer_id = "Qualquer1",
+            customerId = "Qualquer1",
             origin = "Qualquer2",
             destination = "Qualquer3",
             distance = 20,

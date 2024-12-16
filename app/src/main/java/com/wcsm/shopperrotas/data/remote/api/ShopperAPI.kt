@@ -2,9 +2,9 @@ package com.wcsm.shopperrotas.data.remote.api
 
 import com.wcsm.shopperrotas.data.model.RideConfirmRequest
 import com.wcsm.shopperrotas.data.model.RideConfirmResponse
-import com.wcsm.shopperrotas.data.remote.dto.RideEstimate
 import com.wcsm.shopperrotas.data.model.RideEstimateRequest
 import com.wcsm.shopperrotas.data.model.RideResponse
+import com.wcsm.shopperrotas.data.remote.dto.RideEstimate
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET

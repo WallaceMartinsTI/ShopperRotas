@@ -210,7 +210,7 @@ fun RideOptionsScreen(
                 rideViewModel.clearErrorMessage()
 
                 val confirmRide = RideConfirmRequest(
-                    customer_id = requestRideData?.customer_id ?: "",
+                    customerId = requestRideData?.customerId ?: "",
                     origin = requestRideData?.origin ?: "",
                     destination = requestRideData?.destination ?: "",
                     distance = distance ?: 0,

@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.wcsm.shopperrotas.data.model.RideConfirmRequest
 import com.wcsm.shopperrotas.data.model.RideEstimateRequest
-import com.wcsm.shopperrotas.data.model.RideResponseState
 import com.wcsm.shopperrotas.data.model.RideRequest
+import com.wcsm.shopperrotas.data.model.RideResponseState
 import com.wcsm.shopperrotas.data.remote.dto.Driver
 import com.wcsm.shopperrotas.data.remote.dto.Ride
 import com.wcsm.shopperrotas.data.remote.dto.RideEstimate
@@ -13,7 +13,6 @@ import com.wcsm.shopperrotas.data.remote.dto.RideOption
 import com.wcsm.shopperrotas.data.repository.IRideRepository
 import com.wcsm.shopperrotas.utils.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -87,7 +86,7 @@ class RideViewModel @Inject constructor(
     fun fetchRideEstimate(customerId: String, origin: String, destination: String) {
         _estimatedWithSuccess.value = false
         val rideEstimateRequest = RideEstimateRequest(
-            customer_id = customerId.ifBlank { null },
+            customerId = customerId.ifBlank { null },
             origin = origin.ifBlank { null },
             destination = destination.ifBlank { null }
         )

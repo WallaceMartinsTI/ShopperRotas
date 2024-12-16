@@ -46,7 +46,7 @@ class RideRepositoryImplTest {
     @Test
     fun `estimate should return success with no available drivers`() = runTest {
         val estimateRequest = RideEstimateRequest(
-            customer_id = "Qualquer1",
+            customerId = "Qualquer1",
             origin = "Qualquer2",
             destination = "Qualquer3"
         )
@@ -85,7 +85,7 @@ class RideRepositoryImplTest {
     @Test
     fun `estimate should return success with 3 available drivers`() = runTest {
         val estimateRequest = RideEstimateRequest(
-            customer_id = "Qualquer1",
+            customerId = "Qualquer1",
             origin = "Av. Pres. Kenedy, 2385 - Remédios, Osasco - SP, 02675-031",
             destination = "Av. Paulista, 1538 - Bela Vista, São Paulo - SP, 01310-200"
         )
@@ -157,7 +157,7 @@ class RideRepositoryImplTest {
     @Test
     fun `estimate should return success with 2 available drivers`() = runTest {
         val estimateRequest = RideEstimateRequest(
-            customer_id = "Qualquer1",
+            customerId = "Qualquer1",
             origin = "Av. Thomas Edison, 365 - Barra Funda, São Paulo - SP, 01140-000",
             destination = "Av. Paulista, 1538 - Bela Vista, São Paulo - SP, 01310-200"
         )
@@ -218,7 +218,7 @@ class RideRepositoryImplTest {
     @Test
     fun `estimate should return success with 1 available drivers`() = runTest {
         val estimateRequest = RideEstimateRequest(
-            customer_id = "Qualquer1",
+            customerId = "Qualquer1",
             origin = "Av. Brasil, 2033 - Jardim America, São Paulo - SP, 01431-001",
             destination = "Av. Paulista, 1538 - Bela Vista, São Paulo - SP, 01310-200"
         )
@@ -268,7 +268,7 @@ class RideRepositoryImplTest {
     @Test
     fun `estimate should return error for equal addresses`() = runTest {
         val estimateRequest = RideEstimateRequest(
-            customer_id = "Qualquer1",
+            customerId = "Qualquer1",
             origin = "Endereço Teste",
             destination = "Endereço Teste"
         )
@@ -306,7 +306,7 @@ class RideRepositoryImplTest {
     @Test
     fun `estimate should return error message for empty destination`() = runTest {
         val estimateRequest = RideEstimateRequest(
-            customer_id = "Qualquer1",
+            customerId = "Qualquer1",
             origin = "Endereço Teste",
             destination = ""
         )
@@ -344,7 +344,7 @@ class RideRepositoryImplTest {
     @Test
     fun `estimate should return error message for empty origin`() = runTest {
         val estimateRequest = RideEstimateRequest(
-            customer_id = "Qualquer1",
+            customerId = "Qualquer1",
             origin = "",
             destination = "Endereço Teste"
         )
@@ -382,7 +382,7 @@ class RideRepositoryImplTest {
     @Test
     fun `estimate should return error message for blank client id`() = runTest {
         val estimateRequest = RideEstimateRequest(
-            customer_id = "",
+            customerId = "",
             origin = "Endereço Teste",
             destination = "Endereço Teste"
         )
@@ -420,7 +420,7 @@ class RideRepositoryImplTest {
     @Test
     fun `confirm should return success response`() = runTest {
         val rideConfirmRequest = RideConfirmRequest(
-            customer_id = "Qualquer1",
+            customerId = "Qualquer1",
             origin = "Qualquer2",
             destination = "Qualquer3",
             distance = 20,
@@ -451,7 +451,7 @@ class RideRepositoryImplTest {
     @Test
     fun `confirm should return error message for invalid distance for this driver`() = runTest {
         val rideConfirmRequest = RideConfirmRequest(
-            customer_id = "Qualquer1",
+            customerId = "Qualquer1",
             origin = "Qualquer2",
             destination = "Qualquer3",
             distance = 0,
@@ -493,7 +493,7 @@ class RideRepositoryImplTest {
     @Test
     fun `confirm should return error message for invalid driver`() = runTest {
         val rideConfirmRequest = RideConfirmRequest(
-            customer_id = "Qualquer1",
+            customerId = "Qualquer1",
             origin = "Qualquer2",
             destination = "Qualquer3",
             distance = 20,
@@ -535,7 +535,7 @@ class RideRepositoryImplTest {
     @Test
     fun `confirm should return error message for driver not informed`() = runTest {
         val rideConfirmRequest = RideConfirmRequest(
-            customer_id = "Qualquer1",
+            customerId = "Qualquer1",
             origin = "Qualquer2",
             destination = "Qualquer3",
             distance = 20,
@@ -577,7 +577,7 @@ class RideRepositoryImplTest {
     @Test
     fun `confirm should return error message for equal addresses`() = runTest {
         val rideConfirmRequest = RideConfirmRequest(
-            customer_id = "Qualquer1",
+            customerId = "Qualquer1",
             origin = "Endereço Teste",
             destination = "Endereço Teste",
             distance = 20,
@@ -619,7 +619,7 @@ class RideRepositoryImplTest {
     @Test
     fun `confirm should return error message for empty destination`() = runTest {
         val rideConfirmRequest = RideConfirmRequest(
-            customer_id = "Qualquer1",
+            customerId = "Qualquer1",
             origin = "Endereço Teste",
             destination = "",
             distance = 20,
@@ -661,7 +661,7 @@ class RideRepositoryImplTest {
     @Test
     fun `confirm should return error message for empty origin`() = runTest {
         val rideConfirmRequest = RideConfirmRequest(
-            customer_id = "Qualquer1",
+            customerId = "Qualquer1",
             origin = "",
             destination = "Endereço Teste",
             distance = 20,
@@ -703,7 +703,7 @@ class RideRepositoryImplTest {
     @Test
     fun `confirm should return error message for blank client id`() = runTest {
         val rideConfirmRequest = RideConfirmRequest(
-            customer_id = null,
+            customerId = null,
             origin = "Qualquer1",
             destination = "Qualquer2",
             distance = 20,
@@ -754,7 +754,7 @@ class RideRepositoryImplTest {
 
         val expectedResponse = Response.success(
             RideResponse(
-                customer_id = customerId,
+                customerId = customerId,
                 rides = listOf(
                     Ride(
                         id = 1,

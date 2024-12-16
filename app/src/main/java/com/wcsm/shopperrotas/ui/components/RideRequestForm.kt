@@ -49,10 +49,11 @@ fun RideRequestForm(
     */
 
     // RETURN WITH 3 AVAILABLE DRIVERS
-
+    /*
     var customerId by remember { mutableStateOf("Qualquer") }
     var origin by remember { mutableStateOf("Av. Pres. Kenedy, 2385 - Remédios, Osasco - SP, 02675-031") }
     var destination by remember { mutableStateOf("Av. Paulista, 1538 - Bela Vista, São Paulo - SP, 01310-200") }
+    */
 
 
     // RETURN WITH 2 AVAILABLE DRIVERS
@@ -75,12 +76,10 @@ fun RideRequestForm(
     var origin by remember { mutableStateOf("Qualquer1") }
     var destination by remember { mutableStateOf("Qualquer2") }
     */
-/*
 
     var customerId by remember { mutableStateOf("") }
     var origin by remember { mutableStateOf("") }
     var destination by remember { mutableStateOf("") }
-*/
 
     Column(
         modifier = Modifier
