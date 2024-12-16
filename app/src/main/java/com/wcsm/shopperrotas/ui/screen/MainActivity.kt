@@ -65,20 +65,20 @@ private fun AppNavigation(
             )
         }
 
-        composable(route = Screen.RideRequest.route) {
+        composable(route = Screen.RideRequestScreen.route) {
             RideRequestScreen(
                 navController = navController,
                 rideViewModel = rideViewModel
             )
         }
 
-        composable(route = Screen.RideOptions.route) {
+        composable(route = Screen.RideOptionsScreen.route) {
             RideOptionsScreen(
                 navController = navController,
                 rideViewModel = rideViewModel
             )
         }
-        composable(route = Screen.RideHistory.route) {
+        composable(route = Screen.RideHistoryScreen.route) {
             RideHistoryScreen(
                 navController = navController,
                 rideViewModel = rideViewModel

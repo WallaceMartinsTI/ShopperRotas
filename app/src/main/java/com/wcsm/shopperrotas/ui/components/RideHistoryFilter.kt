@@ -5,8 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
@@ -37,7 +36,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.wcsm.shopperrotas.data.dto.Driver
+import com.wcsm.shopperrotas.data.remote.dto.Driver
 import com.wcsm.shopperrotas.ui.theme.ShopperRotasTheme
 import com.wcsm.shopperrotas.ui.theme.SurfaceColor
 import com.wcsm.shopperrotas.ui.theme.TertiaryColor
@@ -227,7 +226,9 @@ fun RideHisotryFilter(
             }
         }
 
-        Row {
+        Column(
+            modifier = Modifier.padding(top = 8.dp)
+        ) {
             Button(
                 onClick = {
                     filterButtonClicked = true
@@ -246,15 +247,13 @@ fun RideHisotryFilter(
                     }
                 },
                 enabled = !isActionLoading,
-                modifier = Modifier.width(150.dp)
+                modifier = Modifier.width(280.dp)
             ) {
                 Text(
                     text = if(filterButtonClicked) "FILTRANDO..." else "APLICAR FILTRO",
                     style = MaterialTheme.typography.bodySmall
                 )
             }
-
-            Spacer(modifier = Modifier.width(8.dp))
 
             Button(
                 onClick = {
@@ -272,7 +271,7 @@ fun RideHisotryFilter(
                     }
                 },
                 enabled = !isActionLoading,
-                modifier = Modifier.width(150.dp)
+                modifier = Modifier.width(280.dp)
             ) {
                 Text(
                     text = if(getAllButtonClicked) "BUSCANDO..." else "LISTAS TODAS",

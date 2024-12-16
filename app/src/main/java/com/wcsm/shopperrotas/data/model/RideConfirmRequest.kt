@@ -1,6 +1,8 @@
-package com.wcsm.shopperrotas.data.dto
+package com.wcsm.shopperrotas.data.model
 
-data class ConfirmRideRequest(
+import com.wcsm.shopperrotas.data.remote.dto.Driver
+
+data class RideConfirmRequest(
     val customer_id: String,
     val origin: String,
     val destination: String,

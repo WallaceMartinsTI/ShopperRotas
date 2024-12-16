@@ -2,13 +2,14 @@ package com.wcsm.shopperrotas.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.wcsm.shopperrotas.data.dto.ConfirmRideRequest
-import com.wcsm.shopperrotas.data.dto.ConfirmRideResponse
-import com.wcsm.shopperrotas.data.dto.Driver
-import com.wcsm.shopperrotas.data.dto.Ride
-import com.wcsm.shopperrotas.data.dto.RideEstimateRequest
-import com.wcsm.shopperrotas.data.dto.RideEstimateResponse
-import com.wcsm.shopperrotas.data.dto.RideOption
+import com.wcsm.shopperrotas.data.model.RideConfirmRequest
+import com.wcsm.shopperrotas.data.model.RideEstimateRequest
+import com.wcsm.shopperrotas.data.model.RideEstimateResponse
+import com.wcsm.shopperrotas.data.model.RideRequest
+import com.wcsm.shopperrotas.data.remote.dto.Driver
+import com.wcsm.shopperrotas.data.remote.dto.Ride
+import com.wcsm.shopperrotas.data.remote.dto.RideEstimate
+import com.wcsm.shopperrotas.data.remote.dto.RideOption
 import com.wcsm.shopperrotas.data.repository.IRideRepository
 import com.wcsm.shopperrotas.utils.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,16 +19,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import org.json.JSONObject
-import retrofit2.HttpException
 import javax.inject.Inject
 
 @HiltViewModel
 class RideViewModel @Inject constructor(
     private val rideRepository : IRideRepository
 ) : ViewModel() {
-    private val _estimateResponse = MutableStateFlow<RideEstimateResponse?>(null)
-    val estimateResponse: StateFlow<RideEstimateResponse?> = _estimateResponse.asStateFlow()
+    private val _estimateResponse = MutableStateFlow<RideEstimate?>(null)
+    val estimateResponse: StateFlow<RideEstimate?> = _estimateResponse.asStateFlow()
 
     private val _drivers = MutableStateFlow<List<RideOption>?>(null)
     val drivers: StateFlow<List<RideOption>?> = _drivers.asStateFlow()
@@ -38,8 +37,8 @@ class RideViewModel @Inject constructor(
     private val _estimatedWithSuccess = MutableStateFlow<Boolean?>(null)
     val estimatedWithSuccess: StateFlow<Boolean?> = _estimatedWithSuccess.asStateFlow()
 
-    private val _confirmRideResponse = MutableStateFlow<ConfirmRideResponse?>(null)
-    val confirmRideResponse: StateFlow<ConfirmRideResponse?> = _confirmRideResponse.asStateFlow()
+    private val _rideConfirmed = MutableStateFlow(false)
+    val rideConfirmed: StateFlow<Boolean> = _rideConfirmed.asStateFlow()
 
     private val _requestRideData = MutableStateFlow<RideEstimateRequest?>(null)
     val requestRideData: StateFlow<RideEstimateRequest?> = _requestRideData.asStateFlow()
@@ -63,7 +62,7 @@ class RideViewModel @Inject constructor(
     }
 
     fun resetConfirmRideResponse() {
-        _confirmRideResponse.value = null
+        _rideConfirmed.value = false
     }
 
     fun setActionLoading(isLoading: Boolean) {
@@ -87,7 +86,7 @@ class RideViewModel @Inject constructor(
 
     fun fetchRideEstimate(customerId: String, origin: String, destination: String) {
         _estimatedWithSuccess.value = false
-        val rideRequest = RideEstimateRequest(
+        val rideEstimateRequest = RideEstimateRequest(
             customer_id = customerId.ifBlank { null },
             origin = origin.ifBlank { null },
             destination = destination.ifBlank { null }
@@ -95,22 +94,19 @@ class RideViewModel @Inject constructor(
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val response = rideRepository.estimate(rideRequest)
-                _requestRideData.value = rideRequest
-                _estimateResponse.value = response
-                _estimatedWithSuccess.value = true
-                _drivers.value = response.options
-                _errorMessage.value = null
-            } catch (e: HttpException) {
-                val errorBody = e.response()?.errorBody()?.string()
-                val errorDescription = errorBody?.let {
-                    JSONObject(it).optString("error_description")
+                when(val rideEstimateResponse = rideRepository.estimate(rideEstimateRequest)) {
+                    is RideEstimateResponse.Success -> {
+                        _requestRideData.value = rideEstimateRequest
+                        _estimateResponse.value = rideEstimateResponse.data
+                        _estimatedWithSuccess.value = true
+                        _drivers.value = rideEstimateResponse.data.options
+                        _errorMessage.value = null
+                    }
+                    is RideEstimateResponse.Error -> {
+                        _errorMessage.value = rideEstimateResponse.errorMessage
+                        _estimateResponse.value = null
+                    }
                 }
-                _errorMessage.value = errorDescription ?: "Ocorreu um erro, tente mais tarde."
-                _estimateResponse.value = null
-            } catch (e: Exception) {
-                _errorMessage.value = e.localizedMessage ?: "Ocorreu um erro desconhecido."
-                _estimateResponse.value = null
             } finally {
                 delay(Constants.CLICK_DELAY)
                 _isActionLoading.value = false
@@ -118,30 +114,19 @@ class RideViewModel @Inject constructor(
         }
     }
 
-    fun sendConfirmRide(confirmRideRequest: ConfirmRideRequest) {
+    fun sendConfirmRide(rideConfirmRequest: RideConfirmRequest) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val response = rideRepository.confirm(confirmRideRequest)
-
-                if (response.isSuccessful) {
-                    response.body()?.let {
-                        _confirmRideResponse.value = it
+                when(val rideConfirmResponse = rideRepository.confirm(rideConfirmRequest)) {
+                    is RideEstimateResponse.Success -> {
+                        _rideConfirmed.value = rideConfirmResponse.data.success
                         _errorMessage.value = null
-                    } ?: run {
-                        _confirmRideResponse.value = null
-                        _errorMessage.value = "Erro desconhecido."
                     }
-                } else {
-                    val errorBody = response.errorBody()?.string()
-                    val errorDescription = errorBody?.let {
-                        JSONObject(it).optString("error_description")
+                    is RideEstimateResponse.Error -> {
+                        _rideConfirmed.value = false
+                        _errorMessage.value = rideConfirmResponse.errorMessage
                     }
-                    _errorMessage.value = errorDescription ?: "Erro desconhecido."
-                    _confirmRideResponse.value = null
                 }
-            } catch (e: Exception) {
-                _errorMessage.value = e.localizedMessage ?: "Ocorreu um erro desconhecido."
-                _confirmRideResponse.value = null
             } finally {
                 delay(Constants.CLICK_DELAY)
                 _isActionLoading.value = false
@@ -150,24 +135,22 @@ class RideViewModel @Inject constructor(
     }
 
     fun fetchRidesHistory(customerId: String, driverId: Int?) {
+        val rideRequest = RideRequest(
+            customerId = customerId,
+            driverId = driverId
+        )
+
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val response = rideRepository.ride(customerId, driverId)
-
-                if (response.isSuccessful) {
-                    _ridesHistory.value = response.body()?.rides
-                    _errorMessage.value = null
-                } else {
-                    val errorBody = response.errorBody()?.string()
-                    val errorDescription = errorBody?.let {
-                        JSONObject(it).optString("error_description")
+                when(val rideHistoryResponse = rideRepository.ride(rideRequest)) {
+                    is RideEstimateResponse.Success -> {
+                        _ridesHistory.value = rideHistoryResponse.data.rides
+                        _errorMessage.value = null
                     }
-                    _errorMessage.value = errorDescription ?: "Erro desconhecido."
+                    is RideEstimateResponse.Error -> {
+                        _errorMessage.value = rideHistoryResponse.errorMessage
+                    }
                 }
-            } catch (e: HttpException) {
-                _errorMessage.value = "Ocorreu um erro, tente mais tarde."
-            } catch (e: Exception) {
-                _errorMessage.value = "Ocorreu um erro desconhecido."
             } finally {
                 delay(Constants.CLICK_DELAY)
                 _isActionLoading.value = false
@@ -177,26 +160,24 @@ class RideViewModel @Inject constructor(
 
     // Filtering by ID doesn't work
     fun getFilteredRideHistory(customerId: String, driver: Driver) {
+        val rideRequest = RideRequest(
+            customerId = customerId,
+            driverId = driver.id
+        )
+
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val response = rideRepository.ride(customerId, driver.id)
-
-                if (response.isSuccessful) {
-                    _ridesHistory.value = response.body()?.rides?.filter {
-                        it.driver.name == driver.name
+                when(val rideHistoryResponse = rideRepository.ride(rideRequest)) {
+                    is RideEstimateResponse.Success -> {
+                        _ridesHistory.value = rideHistoryResponse.data.rides?.filter {
+                            it.driver.name == driver.name
+                        }
+                        _errorMessage.value = null
                     }
-                    _errorMessage.value = null
-                } else {
-                    val errorBody = response.errorBody()?.string()
-                    val errorDescription = errorBody?.let {
-                        JSONObject(it).optString("error_description")
+                    is RideEstimateResponse.Error -> {
+                        _errorMessage.value = rideHistoryResponse.errorMessage
                     }
-                    _errorMessage.value = errorDescription ?: "Erro desconhecido."
                 }
-            } catch (e: HttpException) {
-                _errorMessage.value = "Ocorreu um erro, tente mais tarde."
-            } catch (e: Exception) {
-                _errorMessage.value = "Ocorreu um erro desconhecido."
             } finally {
                 delay(Constants.CLICK_DELAY)
                 _isActionLoading.value = false

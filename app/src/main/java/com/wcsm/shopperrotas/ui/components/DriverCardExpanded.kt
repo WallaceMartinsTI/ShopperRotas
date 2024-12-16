@@ -1,7 +1,6 @@
 package com.wcsm.shopperrotas.ui.components
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,7 +11,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AttachMoney
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
@@ -32,8 +30,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.wcsm.shopperrotas.R
-import com.wcsm.shopperrotas.data.dto.Review
-import com.wcsm.shopperrotas.data.dto.RideOption
+import com.wcsm.shopperrotas.data.remote.dto.Review
+import com.wcsm.shopperrotas.data.remote.dto.RideOption
 import com.wcsm.shopperrotas.ui.theme.MoneyGreenColor
 import com.wcsm.shopperrotas.ui.theme.PoppinsFontFamily
 import com.wcsm.shopperrotas.ui.theme.ShopperRotasTheme

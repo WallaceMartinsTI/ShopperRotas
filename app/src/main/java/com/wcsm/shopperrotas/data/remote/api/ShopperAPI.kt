@@ -1,8 +1,8 @@
-package com.wcsm.shopperrotas.data.api
+package com.wcsm.shopperrotas.data.remote.api
 
 import com.wcsm.shopperrotas.data.model.RideConfirmRequest
 import com.wcsm.shopperrotas.data.model.RideConfirmResponse
-import com.wcsm.shopperrotas.data.model.RideEstimate
+import com.wcsm.shopperrotas.data.remote.dto.RideEstimate
 import com.wcsm.shopperrotas.data.model.RideEstimateRequest
 import com.wcsm.shopperrotas.data.model.RideResponse
 import retrofit2.Response
@@ -18,7 +18,7 @@ interface ShopperAPI {
     @POST("/ride/estimate")
     suspend fun getRideEstimate(
         @Body estimateRequest: RideEstimateRequest
-    ) : RideEstimate
+    ) : Response<RideEstimate>
 
     @PATCH("/ride/confirm")
     suspend fun confirmRide(

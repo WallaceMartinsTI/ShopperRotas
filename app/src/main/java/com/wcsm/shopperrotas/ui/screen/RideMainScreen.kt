@@ -101,7 +101,7 @@ fun RideMainScreen(
             Button(
                 onClick = {
                     rideViewModel.setActionLoading(true)
-                    navController.navigate(Screen.RideRequest.route)
+                    navController.navigate(Screen.RideRequestScreen.route)
                 },
                 enabled = !isActionLoading
             ) {

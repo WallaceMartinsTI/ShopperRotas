@@ -50,7 +50,7 @@ fun RideRequestScreen(
     LaunchedEffect(estimatedWithSuccess) {
         if(estimatedWithSuccess == true) {
             rideViewModel.resetEstimatedWithSuccess()
-            navController.navigate(Screen.RideOptions.route)
+            navController.navigate(Screen.RideOptionsScreen.route)
         }
     }
 

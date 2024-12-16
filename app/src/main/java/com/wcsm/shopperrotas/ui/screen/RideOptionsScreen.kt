@@ -38,8 +38,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.maps.model.LatLng
-import com.wcsm.shopperrotas.data.dto.ConfirmRideRequest
-import com.wcsm.shopperrotas.data.dto.Driver
+import com.wcsm.shopperrotas.data.model.RideConfirmRequest
+import com.wcsm.shopperrotas.data.remote.dto.Driver
 import com.wcsm.shopperrotas.ui.components.DriversAvailable
 import com.wcsm.shopperrotas.ui.components.DynamicMap
 import com.wcsm.shopperrotas.ui.model.Screen
@@ -61,7 +61,7 @@ fun RideOptionsScreen(
     val drivers by rideViewModel.drivers.collectAsStateWithLifecycle()
     val estimateResponse by rideViewModel.estimateResponse.collectAsStateWithLifecycle()
     val requestRideData by rideViewModel.requestRideData.collectAsStateWithLifecycle()
-    val confirmRideResponse by rideViewModel.confirmRideResponse.collectAsStateWithLifecycle()
+    val rideConfirmed by rideViewModel.rideConfirmed.collectAsStateWithLifecycle()
     val errorMessage by rideViewModel.errorMessage.collectAsStateWithLifecycle()
     val isActionLoading by rideViewModel.isActionLoading.collectAsStateWithLifecycle()
 
@@ -95,10 +95,10 @@ fun RideOptionsScreen(
         }
     }
 
-    LaunchedEffect(confirmRideResponse) {
-        if(confirmRideResponse?.success == true) {
+    LaunchedEffect(rideConfirmed) {
+        if(rideConfirmed) {
             rideViewModel.resetConfirmRideResponse()
-            navController.navigate(Screen.RideHistory.route)
+            navController.navigate(Screen.RideHistoryScreen.route)
         }
     }
 
@@ -156,6 +156,7 @@ fun RideOptionsScreen(
             if(!errorMessage.isNullOrEmpty()) {
                 Text(
                     text = "Erro: ${errorMessage!!}",
+                    modifier = Modifier.padding(horizontal = 16.dp),
                     style = MaterialTheme.typography.bodySmall,
                     color = ErrorColor
                 )
@@ -208,7 +209,7 @@ fun RideOptionsScreen(
                 rideViewModel.setActionLoading(true)
                 rideViewModel.clearErrorMessage()
 
-                val confirmRide = ConfirmRideRequest(
+                val confirmRide = RideConfirmRequest(
                     customer_id = requestRideData?.customer_id ?: "",
                     origin = requestRideData?.origin ?: "",
                     destination = requestRideData?.destination ?: "",

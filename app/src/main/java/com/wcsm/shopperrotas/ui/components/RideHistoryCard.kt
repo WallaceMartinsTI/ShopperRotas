@@ -1,6 +1,5 @@
 package com.wcsm.shopperrotas.ui.components
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,13 +11,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.AttachMoney
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.PersonPinCircle
 import androidx.compose.material.icons.filled.Route
-import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material.icons.filled.WatchLater
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
@@ -30,21 +27,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.wcsm.shopperrotas.data.dto.Driver
-import com.wcsm.shopperrotas.data.dto.Ride
+import com.wcsm.shopperrotas.data.remote.dto.Driver
+import com.wcsm.shopperrotas.data.remote.dto.Ride
 import com.wcsm.shopperrotas.ui.theme.MoneyGreenColor
 import com.wcsm.shopperrotas.ui.theme.OnPrimaryColor
 import com.wcsm.shopperrotas.ui.theme.OnSurfaceColor
 import com.wcsm.shopperrotas.ui.theme.ShopperRotasTheme
 import com.wcsm.shopperrotas.ui.theme.SurfaceColor
 import com.wcsm.shopperrotas.ui.theme.TertiaryColor
-import com.wcsm.shopperrotas.ui.theme.White06Color
 import com.wcsm.shopperrotas.utils.distanceDoubleToKmString
-import com.wcsm.shopperrotas.utils.getMinutesAndSeconds
 import com.wcsm.shopperrotas.utils.toBRLString
 import com.wcsm.shopperrotas.utils.toBrazillianDatetime
 

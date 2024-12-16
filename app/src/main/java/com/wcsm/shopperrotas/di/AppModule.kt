@@ -1,6 +1,6 @@
 package com.wcsm.shopperrotas.di
 
-import com.wcsm.shopperrotas.data.api.ShopperAPI
+import com.wcsm.shopperrotas.data.remote.api.ShopperAPI
 import com.wcsm.shopperrotas.data.repository.IRideRepository
 import com.wcsm.shopperrotas.data.repository.RideRepositoryImpl
 import com.wcsm.shopperrotas.utils.Constants

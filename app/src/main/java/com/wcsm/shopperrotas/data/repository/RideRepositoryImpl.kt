@@ -1,30 +1,82 @@
 package com.wcsm.shopperrotas.data.repository
 
-import com.wcsm.shopperrotas.data.api.ShopperAPI
-import com.wcsm.shopperrotas.data.dto.ConfirmRideRequest
-import com.wcsm.shopperrotas.data.dto.ConfirmRideResponse
-import com.wcsm.shopperrotas.data.dto.Location
-import com.wcsm.shopperrotas.data.dto.Review
-import com.wcsm.shopperrotas.data.dto.RideEstimateRequest
-import com.wcsm.shopperrotas.data.dto.RideEstimateResponse
-import com.wcsm.shopperrotas.data.dto.RideOption
-import com.wcsm.shopperrotas.data.dto.RideResponse
-import retrofit2.Response
+import com.google.gson.JsonParser
+import com.wcsm.shopperrotas.data.model.RideConfirmRequest
+import com.wcsm.shopperrotas.data.model.RideConfirmResponse
+import com.wcsm.shopperrotas.data.model.RideEstimateRequest
+import com.wcsm.shopperrotas.data.model.RideEstimateResponse
+import com.wcsm.shopperrotas.data.model.RideRequest
+import com.wcsm.shopperrotas.data.model.RideResponse
+import com.wcsm.shopperrotas.data.remote.api.ShopperAPI
+import com.wcsm.shopperrotas.data.remote.dto.RideEstimate
+import org.json.JSONObject
 import javax.inject.Inject
 
 class RideRepositoryImpl @Inject constructor(
     private val shopperAPI: ShopperAPI
 ) : IRideRepository {
-    override suspend fun estimate(estimateRequest: RideEstimateRequest): RideEstimateResponse {
-        return shopperAPI.getRideEstimate(estimateRequest)
+    override suspend fun estimate(
+        estimateRequest: RideEstimateRequest
+    ): RideEstimateResponse<RideEstimate> {
+        println("CHAMOU ESTIMATE")
+        return try {
+            val response = shopperAPI.getRideEstimate(estimateRequest)
+            if(response.isSuccessful && response.body() != null) {
+                RideEstimateResponse.Success(response.body()!!)
+            } else {
+                val errorBody = response.errorBody()?.string()
+                val errorDescription = errorBody?.let {
+                    val jsonObject = JsonParser.parseString(it).asJsonObject
+                    jsonObject.get("error_description")?.asString
+                }
+                RideEstimateResponse.Error(errorDescription ?: "Ocorreu um erro, tente mais tarde.")
+            }
+        } catch (e: Exception) {
+            RideEstimateResponse.Error(e.localizedMessage ?: "Ocorreu um erro desconhecido.")
+        }
     }
 
-    override suspend fun confirm(confirmRideRequest: ConfirmRideRequest): Response<ConfirmRideResponse> {
-        return shopperAPI.confirmRide(confirmRideRequest)
+    override suspend fun confirm(
+        rideConfirmRequest: RideConfirmRequest
+    ): RideEstimateResponse<RideConfirmResponse> {
+        return try {
+            val response = shopperAPI.confirmRide(rideConfirmRequest)
+            if(response.isSuccessful && response.body() != null) {
+                RideEstimateResponse.Success(response.body()!!)
+            } else {
+                val errorBody = response.errorBody()?.string()
+                val errorDescription = errorBody?.let {
+                    val jsonObject = JsonParser.parseString(it).asJsonObject
+                    jsonObject.get("error_description")?.asString
+                }
+                RideEstimateResponse.Error(errorDescription ?: "Ocorreu um erro, tente mais tarde.")
+            }
+        } catch (e: Exception) {
+            RideEstimateResponse.Error(e.localizedMessage ?: "Ocorreu um erro desconhecido.")
+        }
     }
 
-    override suspend fun ride(customerId: String, driverId: Int?): Response<RideResponse> {
-        return shopperAPI.getHistoryRides(customerId, driverId)
+    override suspend fun ride(
+        rideRequest: RideRequest
+    ): RideEstimateResponse<RideResponse> {
+        return try {
+            val customerId = rideRequest.customerId
+            val driverId = rideRequest.driverId
+
+            val response = shopperAPI.getHistoryRides(customerId, driverId)
+            if(response.isSuccessful && response.body() != null) {
+                RideEstimateResponse.Success(response.body()!!)
+            } else {
+                val errorBody = response.errorBody()?.string()
+                val errorDescription = errorBody?.let {
+                    val jsonObject = JsonParser.parseString(it).asJsonObject
+                    jsonObject.get("error_description")?.asString
+                }
+                RideEstimateResponse.Error(errorDescription ?: "Ocorreu um erro, tente mais tarde.")
+            }
+        } catch (e: Exception) {
+            RideEstimateResponse.Error(e.localizedMessage ?: "Ocorreu um erro desconhecido.")
+        }
     }
 
 }

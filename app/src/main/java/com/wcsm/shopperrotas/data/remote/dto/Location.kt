@@ -1,4 +1,4 @@
-package com.wcsm.shopperrotas.data.model
+package com.wcsm.shopperrotas.data.remote.dto
 
 data class Location(
     val latitude: Double,
