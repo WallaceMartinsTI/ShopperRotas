@@ -1,4 +1,6 @@
-package com.wcsm.shopperrotas.data.dto
+package com.wcsm.shopperrotas.data.model
+
+import com.wcsm.shopperrotas.data.remote.dto.Driver
 
 data class Ride(
     val id: Int,

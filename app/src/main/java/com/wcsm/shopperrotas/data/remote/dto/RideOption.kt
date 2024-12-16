@@ -1,4 +1,6 @@
-package com.wcsm.shopperrotas.data.dto
+package com.wcsm.shopperrotas.data.model
+
+import com.wcsm.shopperrotas.data.remote.dto.Review
 
 data class RideOption(
     val id: Int,

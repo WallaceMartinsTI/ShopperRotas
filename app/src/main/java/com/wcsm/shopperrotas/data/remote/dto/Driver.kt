@@ -1,4 +1,4 @@
-package com.wcsm.shopperrotas.data.dto
+package com.wcsm.shopperrotas.data.model
 
 data class Driver(
     val id: Int,
